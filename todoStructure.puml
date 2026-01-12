@@ -4,6 +4,11 @@
 class Database {
 }
 
+entity Tag {
+    Long Id
+    String name
+}
+
 entity ToDoListCatalog {
     Long Id
     String name
@@ -16,11 +21,6 @@ entity ToDoList {
     String name
     List <ToDoListEntry> entries
     List <Tag> tags
-}
-
-entity Tag {
-    Long Id
-    String name
 }
 
 entity ToDoListEntry {
