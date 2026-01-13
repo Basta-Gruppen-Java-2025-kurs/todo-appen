@@ -1,0 +1,65 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+class Database {
+}
+
+entity Tag {
+    Long Id
+    String name
+}
+
+entity ToDoListCatalog {
+    Long Id
+    String name
+    List <ToDoList> toDoLists
+    List <Tag> tags
+}
+
+entity ToDoList {
+    Long Id
+    String name
+    List <ToDoListEntry> entries
+    List <Tag> tags
+}
+
+entity ToDoListEntry {
+    Long Id
+    String summary
+    String details
+    Boolean done
+    Boolean repeating
+    Enum repeatPeriod <<how often to repeat>>
+    Date deadline
+    List <ToDoListEntry> subTasks
+    List <Tag> tags
+}
+
+enum RepeatPeriod {
+    EVERY_DAY
+    EVERY_MONTH
+    EVERY_WEEK
+    EVERY_MONDAY
+    EVERY_TUESDAY
+    NEVER
+}
+
+entity User {
+    Long Id
+    String name
+    String password <<encrypted>>
+    List <ToDoListCatalog> catalogs
+    List <Tag> tags
+}
+
+User ||--|{ ToDoListCatalog
+User ||--|{ Tag
+ToDoListCatalog ||--|{ ToDoList
+ToDoList ||--|{ ToDoListEntry
+ToDoListEntry ||--|{ ToDoListEntry
+ToDoListCatalog ||--|{ Tag
+ToDoList ||--|{ Tag
+ToDoListEntry ||--|{ Tag
+ToDoListEntry --> RepeatPeriod
+
+@enduml
