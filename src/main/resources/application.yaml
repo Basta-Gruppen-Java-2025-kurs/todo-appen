@@ -1,11 +1,14 @@
+
 spring:
+  config:
+    import: optional:file:../../../example.env
   application:
     name: todo-appen
 
   datasource:
     url: jdbc:mysql://localhost:3306/todo_db?createDatabaseIfNotExist=true
-    username: ${todo_user}
-    password: ${todo_password}
+    username: ${TODO_USER}
+    password: ${TODO_USER}
 
   jpa:
     hibernate:
