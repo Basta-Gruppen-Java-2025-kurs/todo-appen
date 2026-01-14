@@ -1,7 +1,7 @@
 
 spring:
   config:
-    import: optional:file:../../../example.env
+    import:  optional:file:.env[.properties]
   application:
     name: todo-appen
 
@@ -11,6 +11,7 @@ spring:
     password: ${TODO_PASSWORD}
 
   jpa:
+    database-platform: org.hibernate.dialect.MySQLDialect
     hibernate:
       ddl-auto: update
     show-sql: true
