@@ -1,3 +1,20 @@
+
 spring:
+  config:
+    import:  optional:file:.env[.properties]
   application:
     name: todo-appen
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/todo_db?createDatabaseIfNotExist=true
+    username: ${TODO_USER}
+    password: ${TODO_PASSWORD}
+
+  jpa:
+    database-platform: org.hibernate.dialect.MySQLDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+server:
+  port: 8080
