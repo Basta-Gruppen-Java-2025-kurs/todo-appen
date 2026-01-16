@@ -21,4 +21,10 @@ public class ToDoList {
     @OneToMany
     @JsonManagedReference
     private List <Tag> tags;
+
+    @ManyToOne
+    private ToDoListCatalog catalog;
+
+    @ManyToOne
+    private User owner;
 }
