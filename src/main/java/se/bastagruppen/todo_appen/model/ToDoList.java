@@ -10,7 +10,7 @@ import java.util.Set;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "todo_lists")
+@Table(name = "todo_lists", uniqueConstraints = {@UniqueConstraint(columnNames = {"name", "catalog_id"})})
 public class ToDoList {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,4 +25,11 @@ public class ToDoList {
     @JsonManagedReference
     private Set<Tag> tags;
 
+    @ManyToOne
+    @JoinColumn(name = "catalog_id")
+    private ToDoListCatalog catalog;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User owner;
 }
