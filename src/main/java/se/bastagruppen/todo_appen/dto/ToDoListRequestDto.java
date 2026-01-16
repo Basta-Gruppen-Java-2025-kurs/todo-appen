@@ -10,8 +10,14 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ToDoListRequestDto {
-    @NotNull(message = "cannot be null")
+    private final String CANNOT_BE_NULL = "cannot be null";
+    @NotNull(message = CANNOT_BE_NULL)
     @NotBlank(message = "cannot be empty")
     private String name;
+
+    @NotNull(message = CANNOT_BE_NULL)
     private Long userId;
+
+    @NotNull(message = CANNOT_BE_NULL)
+    private Long catalogId;
 }

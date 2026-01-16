@@ -19,7 +19,7 @@ public class Tag {
 
     private String name;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private User owner;
 }
