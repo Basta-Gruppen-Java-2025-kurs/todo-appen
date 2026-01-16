@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-
 //TODO: This is a temporary user entity
 @Entity
 @Table(name = "users")
