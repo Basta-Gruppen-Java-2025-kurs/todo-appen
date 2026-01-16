@@ -3,14 +3,14 @@ package se.bastagruppen.todo_appen.model;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 
-import java.util.List;
+import java.util.Set;
 
 @Entity
-@Table(name = "todo_lists")
-@RequiredArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
+@Table(name = "todo_lists", uniqueConstraints = {@UniqueConstraint(columnNames = {"name", "catalog_id"})})
 public class ToDoList {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,13 +18,18 @@ public class ToDoList {
 
     private String name;
 
-    @OneToMany
+    @ManyToMany
+    @JoinTable( name = "tags_todo_lists",
+                joinColumns = @JoinColumn(name = "todo_list_id"),
+                inverseJoinColumns = @JoinColumn(name = "tag_id"))
     @JsonManagedReference
-    private List <Tag> tags;
+    private Set<Tag> tags;
 
     @ManyToOne
+    @JoinColumn(name = "catalog_id")
     private ToDoListCatalog catalog;
 
     @ManyToOne
+    @JoinColumn(name = "user_id")
     private User owner;
 }

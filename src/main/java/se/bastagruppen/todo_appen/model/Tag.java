@@ -1,13 +1,21 @@
 package se.bastagruppen.todo_appen.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "tags")
+@Table(name = "tags", uniqueConstraints = {@UniqueConstraint(columnNames = {"name", "user_id"})})
+@AllArgsConstructor
+@NoArgsConstructor
 public class Tag {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    private Long id;
 
-    String name;
+    private String name;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
+    private User owner;
 }
