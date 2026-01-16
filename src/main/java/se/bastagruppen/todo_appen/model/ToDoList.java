@@ -3,7 +3,9 @@ package se.bastagruppen.todo_appen.model;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.Set;
 
@@ -11,6 +13,8 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "todo_lists", uniqueConstraints = {@UniqueConstraint(columnNames = {"name", "catalog_id"})})
+@Getter
+@Setter
 public class ToDoList {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
