@@ -8,8 +8,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -24,10 +24,11 @@ public class ToDoListEntry {
     private String summary;
     private String details;
     private Boolean done;
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private Date deadline;
 
-    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL)
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate deadline;
+
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference
     private List<ToDoListEntry> subtasks = new ArrayList<>();
 
