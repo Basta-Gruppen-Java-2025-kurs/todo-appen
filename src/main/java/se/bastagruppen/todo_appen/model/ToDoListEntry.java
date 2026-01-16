@@ -1,72 +1,41 @@
 package se.bastagruppen.todo_appen.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "todo_list_entries")
 public class ToDoListEntry {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @NotNull
     private String summary;
     private String details;
     private Boolean done;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date deadline;
-    private List<ToDoListEntry> subtasks;
+
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private List<ToDoListEntry> subtasks = new ArrayList<>();
+
+    @ManyToOne
+    @JoinColumn(name = "parent_id")
+    @JsonBackReference
+    private ToDoListEntry parent;
+
+    // TODO: finnish tags
     // private List<Tag> tags;
-
-
-    public ToDoListEntry() {
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getSummary() {
-        return summary;
-    }
-
-    public void setSummary(String summary) {
-        this.summary = summary;
-    }
-
-    public String getDetails() {
-        return details;
-    }
-
-    public void setDetails(String details) {
-        this.details = details;
-    }
-
-    public Boolean getDone() {
-        return done;
-    }
-
-    public void setDone(Boolean done) {
-        this.done = done;
-    }
-
-    public Date getDeadline() {
-        return deadline;
-    }
-
-    public void setDeadline(Date deadline) {
-        this.deadline = deadline;
-    }
-
-    public List<ToDoListEntry> getSubtasks() {
-        return subtasks;
-    }
-
-    public void setSubtasks(List<ToDoListEntry> subtasks) {
-        this.subtasks = subtasks;
-    }
 }
