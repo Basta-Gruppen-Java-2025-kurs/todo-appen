@@ -1,6 +1,5 @@
 package se.bastagruppen.todo_appen.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,8 +8,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import se.bastagruppen.todo_appen.model.ToDoListCatalog;
-import se.bastagruppen.todo_appen.model.User;
+import se.bastagruppen.todo_appen.dto.ToDoListCatalogResponse;
 import se.bastagruppen.todo_appen.service.ToDoListCatalogService;
 
 import java.util.List;
@@ -34,16 +32,13 @@ class ToDoListCatalogControllerTest {
     @Test
     @DisplayName("GET /api/catalogs should return user's catalogs")
     void getCatalogsForUser() throws Exception {
-        User user = new User();
-        user.setUsername("user1");
-
-        ToDoListCatalog catalog1 = new ToDoListCatalog();
+        ToDoListCatalogResponse catalog1 = new ToDoListCatalogResponse();
         catalog1.setName("Work Tasks");
-        catalog1.setUser(user);
+        catalog1.setUserId(1L);
 
-        ToDoListCatalog catalog2 = new ToDoListCatalog();
+        ToDoListCatalogResponse catalog2 = new ToDoListCatalogResponse();
         catalog2.setName("Personal Tasks");
-        catalog2.setUser(user);
+        catalog2.setUserId(1L);
 
         when(catalogService.getCatalogsForUser(anyLong()))
                 .thenReturn(List.of(catalog1, catalog2));
@@ -59,12 +54,9 @@ class ToDoListCatalogControllerTest {
     @Test
     @DisplayName("POST /api/catalogs should create a new catalog")
     void createCatalog() throws Exception {
-        User user = new User();
-        user.setUsername("user1");
 
-        ToDoListCatalog catalog = new ToDoListCatalog();
+        ToDoListCatalogResponse catalog = new ToDoListCatalogResponse();
         catalog.setName("Work Tasks");
-        catalog.setUser(user);
 
         when(catalogService.createCatalog(anyLong(), anyString())).thenReturn(catalog);
 
@@ -73,8 +65,7 @@ class ToDoListCatalogControllerTest {
                         .param("name", "Work Tasks")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.name").value("Work Tasks"))
-                .andExpect(jsonPath("$.user.username").value("user1"));
+                .andExpect(jsonPath("$.name").value("Work Tasks"));
     }
 }
 

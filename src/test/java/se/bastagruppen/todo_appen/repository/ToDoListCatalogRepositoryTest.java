@@ -78,5 +78,4 @@ public class ToDoListCatalogRepositoryTest {
         assertThat(user1Catalogs).hasSize(1);
         assertThat(user1Catalogs.get(0).getName()).isEqualTo("Work Tasks");
     }
-
 }

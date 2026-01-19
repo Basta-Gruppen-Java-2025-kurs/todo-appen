@@ -8,6 +8,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import se.bastagruppen.todo_appen.dto.ToDoListCatalogResponse;
 import se.bastagruppen.todo_appen.model.ToDoListCatalog;
 import se.bastagruppen.todo_appen.model.User;
 import se.bastagruppen.todo_appen.repository.ToDoListCatalogRepository;
@@ -36,6 +37,7 @@ public class ToDoListCatalogServiceTest {
     void setup() {
         user = new User();
         user.setUsername("user1");
+        user.setId(1L);
 
         catalog = new ToDoListCatalog();
         catalog.setName("Work Tasks");
@@ -48,10 +50,11 @@ public class ToDoListCatalogServiceTest {
         //TODO: remove comment when existByUserAndName is used
         /*when(catalogRepository.existsByUserIdAndName(user.getId(), "Work Tasks"))
                 .thenReturn(false);*/
+
         when(catalogRepository.save(any(ToDoListCatalog.class)))
                 .thenReturn(catalog);
 
-        ToDoListCatalog result = catalogService.createCatalog(user.getId(), "Work Tasks");
+        ToDoListCatalogResponse result = catalogService.createCatalog(user.getId(), "Work Tasks");
 
         assertThat(result).isNotNull();
         assertThat(result.getName()).isEqualTo("Work Tasks");
@@ -82,7 +85,7 @@ public class ToDoListCatalogServiceTest {
         when(catalogRepository.findAllByUserId(user.getId()))
                 .thenReturn(Arrays.asList(catalog, catalog2));
 
-        List<ToDoListCatalog> result = catalogService.getCatalogsForUser(user.getId());
+        List<ToDoListCatalogResponse> result = catalogService.getCatalogsForUser(user.getId());
 
         assertThat(result).hasSize(2);
         assertThat(result.get(0).getName()).isEqualTo("Work Tasks");
