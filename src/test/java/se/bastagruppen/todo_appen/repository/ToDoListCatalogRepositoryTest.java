@@ -1,13 +1,12 @@
 package se.bastagruppen.todo_appen.repository;
 
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 import se.bastagruppen.todo_appen.model.ToDoListCatalog;
 import se.bastagruppen.todo_appen.model.User;
 
@@ -17,13 +16,17 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@DataJpaTest
+@SpringBootTest
 @ActiveProfiles("test")
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.ANY)
+@Transactional
 public class ToDoListCatalogRepositoryTest {
 
     @Autowired
     private ToDoListCatalogRepository catalogRepository;
+
+    //TODO: use later
+    /*@Autowired
+    private UserRepository userRepository;*/
 
     private User user1;
     private User user2;
@@ -33,9 +36,11 @@ public class ToDoListCatalogRepositoryTest {
     void setup() {
         user1 = new User();
         user1.setUsername("user1");
+        // user1 = userRepository.save(user1);
 
         user2 = new User();
         user2.setUsername("user2");
+        // user2 = userRepository.save(user2);
 
         ToDoListCatalog catalog1 = new ToDoListCatalog();
         catalog1.setUser(user1);
