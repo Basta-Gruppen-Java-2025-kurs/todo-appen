@@ -10,7 +10,7 @@ import se.bastagruppen.todo_appen.dto.ToDoListEntryRequestDto;
 import se.bastagruppen.todo_appen.dto.ToDoListEntryResponseDto;
 import se.bastagruppen.todo_appen.service.ToDoListEntryService;
 
-// TODO: /users/{userId}/catalogs/{catalogId}/lists/{listId}/entries
+// TODO: /lists/{listId}/entries ?
 @RequestMapping("/entries")
 @RequiredArgsConstructor
 public class ToDoListEntryController {
