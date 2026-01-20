@@ -8,8 +8,10 @@ import lombok.Setter;
 
 
 //TODO: This is a temporary user entity
-@Entity @Table(name = "users")
-@Getter @Setter
+@Entity
+@Table(name = "users")
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
