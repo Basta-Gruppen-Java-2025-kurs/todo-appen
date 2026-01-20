@@ -49,9 +49,9 @@ public class ToDoListJPATest {
         repository.deleteAll();
 
         ToDoList toDoList = new ToDoList();
-        ToDoListCatalog catalog = new ToDoListCatalog();
+        catalog = new ToDoListCatalog();
         catalog.setId(1L);
-        User user = new User();
+        user = new User();
         user.setId(1L);
         Mockito.when(catalogRepository.findById(1L)).thenReturn(Optional.of(catalog));
         Mockito.when(userRepository.findById(1L)).thenReturn(Optional.of(user));
