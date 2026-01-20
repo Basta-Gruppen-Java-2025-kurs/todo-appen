@@ -10,15 +10,11 @@ import se.bastagruppen.todo_appen.dto.ToDoListEntryRequestDto;
 import se.bastagruppen.todo_appen.dto.ToDoListEntryResponseDto;
 import se.bastagruppen.todo_appen.service.ToDoListEntryService;
 
-// TODO: /lists/{listId}/entries ?
+
 @RequestMapping("/entries")
 @RequiredArgsConstructor
 public class ToDoListEntryController {
     private final ToDoListEntryService service;
-
-    public ToDoListEntryController(ToDoListEntryService service) {
-        this.service = service;
-    }
 
     @PostMapping
     public ResponseEntity<ToDoListEntryResponseDto> createToDoListEntry(@Valid @RequestBody ToDoListEntryRequestDto dto) {
