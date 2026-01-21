@@ -23,7 +23,4 @@ public class ToDoListEntryRequestDto {
     private LocalDate deadline;
 
     private Long parentId;
-
-    @NotNull(message = "listId can not be null")
-    private Long listId;
 }
