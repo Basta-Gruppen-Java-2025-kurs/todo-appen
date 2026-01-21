@@ -12,7 +12,6 @@ import se.bastagruppen.todo_appen.model.ToDoListCatalog;
 import se.bastagruppen.todo_appen.model.User;
 
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -36,8 +35,6 @@ public class ToDoListJPATest {
 
     private User user;
     private ToDoListCatalog catalog;
-
-    static AutoCloseable mocks;
 
     @BeforeEach
     void setUp() {
