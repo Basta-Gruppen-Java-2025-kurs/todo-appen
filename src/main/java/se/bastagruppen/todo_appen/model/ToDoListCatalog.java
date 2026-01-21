@@ -27,7 +27,7 @@ public class ToDoListCatalog {
     @NotBlank(message = "Catalog name cannot be blank")
     private String name;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 }

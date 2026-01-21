@@ -1,18 +1,11 @@
 package se.bastagruppen.todo_appen.repository;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabase;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.test.context.ActiveProfiles;
 import se.bastagruppen.todo_appen.model.ToDoList;
 import se.bastagruppen.todo_appen.model.ToDoListCatalog;
@@ -32,11 +25,14 @@ public class ToDoListJPATest {
     @Autowired
     private ToDoListRepository repository;
 
-    @Mock
-    private JpaRepository<ToDoListCatalog, Long> catalogRepository;
+    @Autowired
+    private ToDoListCatalogRepository catalogRepository;
 
-    @Mock
-    private JpaRepository<User, Long> userRepository;
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private TagRepository tagRepository;
 
     private User user;
     private ToDoListCatalog catalog;
@@ -45,16 +41,21 @@ public class ToDoListJPATest {
 
     @BeforeEach
     void setUp() {
-        mocks = MockitoAnnotations.openMocks(this);
         repository.deleteAll();
+        catalogRepository.deleteAll();
+        userRepository.deleteAll();
+        tagRepository.deleteAll();
+
+        User userToSave = new User();
+        userToSave.setUsername("TestUser");
+        user = userRepository.save(userToSave);
+
+        ToDoListCatalog catalogToSave = new ToDoListCatalog();
+        catalogToSave.setName("Catalog 1");
+        catalogToSave.setUser(user);
+        catalog = catalogRepository.save(catalogToSave);
 
         ToDoList toDoList = new ToDoList();
-        catalog = new ToDoListCatalog();
-        catalog.setId(1L);
-        user = new User();
-        user.setId(1L);
-        Mockito.when(catalogRepository.findById(1L)).thenReturn(Optional.of(catalog));
-        Mockito.when(userRepository.findById(1L)).thenReturn(Optional.of(user));
         toDoList.setCatalog(catalog);
         toDoList.setOwner(user);
         toDoList.setName("Test List 1");
@@ -75,14 +76,12 @@ public class ToDoListJPATest {
     @DisplayName("Repository saves and retrieves a new list")
     void basicPersistenceTest() {
         ToDoList toDoList = new ToDoList();
+        toDoList.setName("Abracadabra");
+        toDoList.setOwner(user);
+        toDoList.setCatalog(catalog);
         ToDoList savedList = repository.save(toDoList);
         assertNotNull(savedList);
+        assertEquals(savedList.getName(), toDoList.getName());
     }
 
-    @AfterAll
-    static void tearDown() throws Exception {
-        if (mocks != null) {
-            mocks.close();
-        }
-    }
 }
