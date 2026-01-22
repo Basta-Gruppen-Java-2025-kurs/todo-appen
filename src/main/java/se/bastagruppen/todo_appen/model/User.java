@@ -6,9 +6,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-//TODO: This is a temporary user entity
+import java.util.List;
+
+
 @Entity
-@Table(name = "users")
+@Table(
+        name = "users",
+        uniqueConstraints = @UniqueConstraint(columnNames = "username"))
 @Getter
 @Setter
 @NoArgsConstructor
@@ -18,5 +22,15 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false, unique = true)
     private String username;
+
+    @Column(nullable = false)
+    private String password;
+
+    @OneToMany(mappedBy = "user")
+    private List<ToDoListCatalog> catalogs;
+
+    @OneToMany(mappedBy = "owner")
+    private List<Tag> tags;
 }
