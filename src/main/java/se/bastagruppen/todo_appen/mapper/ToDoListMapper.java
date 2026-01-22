@@ -17,7 +17,7 @@ public interface ToDoListMapper {
     ToDoList toEntity(ToDoListRequestDto dto);
 
     @Mapping(source = "entity.tags", target = "tags")
-    @Mapping(source = "entity.catalog", target = "catalog")
+    @Mapping(source = "entity.catalog", target = "catalogName")
     ToDoListResponseDto toDto(ToDoList entity);
 
     default String tagToString(Tag tag) {

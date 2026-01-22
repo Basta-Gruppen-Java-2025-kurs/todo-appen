@@ -14,5 +14,5 @@ public class ToDoListResponseDto {
     private String name;
     private String username;
     private Set<String> tags;
-    private String catalog;
+    private String catalogName;
 }
