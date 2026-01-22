@@ -28,7 +28,16 @@
 	</scm>
 	<properties>
 		<java.version>21</java.version>
+        <spring.profiles.active> </spring.profiles.active>
 	</properties>
+    <profiles>
+        <profile>
+            <id>mariadb</id>
+            <properties>
+                <spring.profiles.active>mariadb</spring.profiles.active>
+            </properties>
+        </profile>
+    </profiles>
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
