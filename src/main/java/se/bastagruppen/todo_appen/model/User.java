@@ -1,23 +1,23 @@
 package se.bastagruppen.todo_appen.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-
-//TODO: This is a temporary user entity
 @Entity
 @Table(name = "users")
-@Getter
-@Setter
+@Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false, unique = true)
     private String username;
+
+    // Store BCrypt hash here (never plaintext)
+    @Column(nullable = false)
+    private String password;
 }
