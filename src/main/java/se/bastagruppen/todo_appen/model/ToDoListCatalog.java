@@ -9,7 +9,7 @@ import lombok.Setter;
 
 @Entity
 @Table(
-        name = "todo_list_catalog",
+        name = "todo_list_catalogs",
         uniqueConstraints = {
                 @UniqueConstraint(columnNames = {"user_id", "name"})
         }
@@ -27,8 +27,7 @@ public class ToDoListCatalog {
     @NotBlank(message = "Catalog name cannot be blank")
     private String name;
 
-    //TODO: remove cascade = CascadeType.PERSIST when user is ready
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 }
