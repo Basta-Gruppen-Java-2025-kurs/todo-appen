@@ -24,9 +24,8 @@ public class ToDoListCatalogRepositoryTest {
     @Autowired
     private ToDoListCatalogRepository catalogRepository;
 
-    //TODO: use later
-    /*@Autowired
-    private UserRepository userRepository;*/
+    @Autowired
+    private UserRepository userRepository;
 
     private User user1;
     private User user2;
@@ -36,11 +35,13 @@ public class ToDoListCatalogRepositoryTest {
     void setup() {
         user1 = new User();
         user1.setUsername("user1");
-        // user1 = userRepository.save(user1);
+        user1.setPassword("test1234");
+        user1 = userRepository.save(user1);
 
         user2 = new User();
         user2.setUsername("user2");
-        // user2 = userRepository.save(user2);
+        user2.setPassword("test1234");
+        user2 = userRepository.save(user2);
 
         ToDoListCatalog catalog1 = new ToDoListCatalog();
         catalog1.setUser(user1);
