@@ -27,7 +27,8 @@ public class ToDoListCatalog {
     @NotBlank(message = "Catalog name cannot be blank")
     private String name;
 
-    @ManyToOne
+    //TODO: remove cascade = CascadeType.PERSIST when user is ready
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 }
