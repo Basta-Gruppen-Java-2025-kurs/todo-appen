@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "tags", uniqueConstraints = {@UniqueConstraint(columnNames = {"name", "user_id"})})
+@Table(name = "tags", uniqueConstraints = {@UniqueConstraint(name = "UniqueTagNamesForUser", columnNames = {"name", "user_id"})})
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -19,7 +19,7 @@ public class Tag {
 
     private String name;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User owner;
 }
