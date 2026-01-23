@@ -17,5 +17,6 @@ public interface ToDoListEntryMapper {
     ToDoListEntry toEntity(ToDoListEntryRequestDto dto);
 
     @Mapping(source = "parent.id", target = "parentId")
+    @Mapping(source = "list.id", target = "listId")
     ToDoListEntryResponseDto toDto(ToDoListEntry entity);
 }

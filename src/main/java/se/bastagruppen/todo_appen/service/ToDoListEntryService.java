@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import se.bastagruppen.todo_appen.dto.ToDoListEntryRequestDto;
 import se.bastagruppen.todo_appen.dto.ToDoListEntryResponseDto;
-import se.bastagruppen.todo_appen.dto.ToDoListResponseDto;
+import se.bastagruppen.todo_appen.exception.BadRequestException;
 import se.bastagruppen.todo_appen.exception.NotFoundException;
 import se.bastagruppen.todo_appen.exception.ToDoListNotFoundException;
 import se.bastagruppen.todo_appen.mapper.ToDoListEntryMapper;
@@ -27,12 +27,21 @@ public class ToDoListEntryService {
         ToDoList list = listRepository.findById(listId)
                 .orElseThrow(() -> new ToDoListNotFoundException(listId));
 
+        // TODO: make sure the list belongs to an authenticated user
+        // if (!list.getOwner().getId().equals(authenticatedUserId)) {
+        //     throw new AccessDeniedException("This list id belongs to another user");
+        // }
+
         ToDoListEntry entry = mapper.toEntity(dto);
         entry.setList(list);
 
-        if(dto.getParentId() != null) {
+        if (dto.getParentId() != null) {
             ToDoListEntry parent = repository.findById(dto.getParentId())
                     .orElseThrow(() -> new NotFoundException("Parent entry not found"));
+
+            if(!parent.getList().getId().equals(listId)) {
+                throw new BadRequestException("Parent task must be in the same list as subtask");
+            }
 
             entry.setParent(parent);
         }
@@ -40,7 +49,6 @@ public class ToDoListEntryService {
         ToDoListEntry saved = repository.save(entry);
 
         return mapper.toDto(saved);
-
     }
 
     public List<ToDoListEntryResponseDto> getAllEntriesOfAList(Long listId) {
