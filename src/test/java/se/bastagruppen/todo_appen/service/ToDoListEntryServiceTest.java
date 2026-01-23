@@ -7,6 +7,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import se.bastagruppen.todo_appen.dto.ToDoListEntryRequestDto;
 import se.bastagruppen.todo_appen.dto.ToDoListEntryResponseDto;
+import se.bastagruppen.todo_appen.exception.BadRequestException;
+import se.bastagruppen.todo_appen.exception.NotFoundException;
 import se.bastagruppen.todo_appen.exception.ToDoListNotFoundException;
 import se.bastagruppen.todo_appen.mapper.ToDoListEntryMapper;
 import se.bastagruppen.todo_appen.model.ToDoList;
@@ -18,7 +20,7 @@ import java.time.LocalDate;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class ToDoListEntryServiceTest {
@@ -148,6 +150,7 @@ public class ToDoListEntryServiceTest {
 
         ToDoListEntry parent = new ToDoListEntry();
         parent.setId(parentId);
+        parent.setList(list);
 
         ToDoListEntryRequestDto dto = new ToDoListEntryRequestDto();
         dto.setSummary("Subtask");
@@ -175,6 +178,65 @@ public class ToDoListEntryServiceTest {
                 service.createToDoListEntry(listId, dto);
 
         assertEquals(parentId, result.getParentId());
+    }
+
+    @Test
+    void createSubtask_parentNotFound_throwsNotFound() {
+        Long listId = 1L;
+        Long missingParentId = 99L;
+
+        ToDoList list = new ToDoList();
+        list.setId(listId);
+
+        ToDoListEntryRequestDto dto = new ToDoListEntryRequestDto();
+        dto.setSummary("Subtask");
+        dto.setParentId(missingParentId);
+
+        ToDoListEntry entry = new ToDoListEntry();
+
+        when(listRepository.findById(listId)).thenReturn(Optional.of(list));
+        when(repository.findById(missingParentId)).thenReturn(Optional.empty());
+        when(mapper.toEntity(dto)).thenReturn(entry);
+
+        assertThrows(NotFoundException.class, () ->
+                service.createToDoListEntry(listId, dto)
+        );
+        verify(repository, never()).save(any());
+    }
+
+    @Test
+    void createSubtask_parentInDifferentList_throwsBadRequest() {
+        Long listId = 1L;
+        Long parentId = 10L;
+        Long otherListId = 2L;
+
+        // Target list (where we try to add subtask)
+        ToDoList targetList = new ToDoList();
+        targetList.setId(listId);
+
+        // Parent entry (which belongs to another list)
+        ToDoList parentList = new ToDoList();
+        parentList.setId(otherListId);
+
+        ToDoListEntry parent = new ToDoListEntry();
+        parent.setId(parentId);
+        parent.setList(parentList);  // parent doesn't belong target list! Should throw Bad Request.
+
+        // DTO with parentId = parentId, but listId = targetList
+        ToDoListEntryRequestDto dto = new ToDoListEntryRequestDto();
+        dto.setSummary("Subtask");
+        dto.setParentId(parentId);
+
+        ToDoListEntry entry = new ToDoListEntry();
+
+        when(listRepository.findById(listId)).thenReturn(Optional.of(targetList));
+        when(repository.findById(parentId)).thenReturn(Optional.of(parent));
+        when(mapper.toEntity(dto)).thenReturn(entry);
+
+        assertThrows(BadRequestException.class, () ->
+                service.createToDoListEntry(listId, dto)
+        );
+        verify(repository, never()).save(any());
     }
 
 }
