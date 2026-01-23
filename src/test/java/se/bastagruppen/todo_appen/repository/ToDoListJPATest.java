@@ -45,6 +45,7 @@ public class ToDoListJPATest {
 
         User userToSave = new User();
         userToSave.setUsername("TestUser");
+        userToSave.setPassword("qiuow1111");
         user = userRepository.save(userToSave);
 
         ToDoListCatalog catalogToSave = new ToDoListCatalog();

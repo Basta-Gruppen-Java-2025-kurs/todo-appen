@@ -1,6 +1,5 @@
 package se.bastagruppen.todo_appen.service;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -8,7 +7,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mapstruct.factory.Mappers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.ActiveProfiles;
@@ -20,6 +18,7 @@ import se.bastagruppen.todo_appen.model.ToDoListCatalog;
 import se.bastagruppen.todo_appen.model.User;
 import se.bastagruppen.todo_appen.repository.ToDoListRepository;
 
+import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -45,7 +44,7 @@ public class ToDoListServiceTest {
 
     @BeforeEach
     void setUp() {
-        testUser = new User(1L, "Tester Joe");
+        testUser = new User(1L, "Tester Joe", "qiuow1111", List.of(), List.of());
         testTag = new Tag(1L, "test tag", testUser);
         testCatalog = new ToDoListCatalog(1L, "Test Catalog", testUser);
         testToDoList = new ToDoList(1L, "Test TODO list", Set.of(testTag), testCatalog, testUser);
