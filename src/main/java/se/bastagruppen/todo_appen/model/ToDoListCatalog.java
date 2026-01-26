@@ -9,7 +9,7 @@ import lombok.Setter;
 
 @Entity
 @Table(
-        name = "todo_list_catalog",
+        name = "todo_list_catalogs",
         uniqueConstraints = {
                 @UniqueConstraint(columnNames = {"user_id", "name"})
         }

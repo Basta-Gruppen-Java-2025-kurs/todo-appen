@@ -3,9 +3,15 @@ package se.bastagruppen.todo_appen.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
+
 @Entity
-@Table(name = "users")
-@Getter @Setter
+@Table(
+        name = "users",
+        uniqueConstraints = @UniqueConstraint(columnNames = "username"))
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
@@ -17,7 +23,12 @@ public class User {
     @Column(nullable = false, unique = true)
     private String username;
 
-    // Store BCrypt hash here (never plaintext)
     @Column(nullable = false)
     private String password;
+
+    @OneToMany(mappedBy = "user")
+    private List<ToDoListCatalog> catalogs;
+
+    @OneToMany(mappedBy = "owner")
+    private List<Tag> tags;
 }

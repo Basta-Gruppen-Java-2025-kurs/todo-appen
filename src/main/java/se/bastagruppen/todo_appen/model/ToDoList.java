@@ -12,7 +12,7 @@ import java.util.Set;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "todo_lists", uniqueConstraints = {@UniqueConstraint(columnNames = {"name", "catalog_id"})})
+@Table(name = "todo_lists", uniqueConstraints = {@UniqueConstraint(name = "UniqueListNamesForCatalog", columnNames = {"name", "catalog_id"})})
 @Getter
 @Setter
 public class ToDoList {
@@ -33,7 +33,7 @@ public class ToDoList {
     @JoinColumn(name = "catalog_id")
     private ToDoListCatalog catalog;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id")
     private User owner;
 }
