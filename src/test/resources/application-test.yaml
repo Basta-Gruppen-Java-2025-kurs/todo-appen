@@ -9,10 +9,7 @@ spring:
       ddl-auto: create-drop
     show-sql: false
 
-  h2:
-    console:
-      enabled: true
-
-logging:
-  level:
-    org.springframework.security: WARN
+# ADD THIS SECTION:
+jwt:
+  secret: "this-is-a-very-long-secret-key-at-least-32-characters"
+  expiration-minutes: 60
