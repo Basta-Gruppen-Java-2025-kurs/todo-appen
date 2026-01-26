@@ -7,6 +7,9 @@ import se.bastagruppen.todo_appen.model.ToDoList;
 import java.util.Optional;
 
 public interface ToDoListRepository extends JpaRepository<ToDoList, Long> {
+
+    boolean existsByCatalogIdAndName(Long catalogId, String name);
+
     @Query("""
     SELECT l FROM ToDoList l
     WHERE l.id = :listId
