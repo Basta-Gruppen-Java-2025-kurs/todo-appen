@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ToDoListRequestDto {
-    private final String CANNOT_BE_NULL = "cannot be null";
+    private final static String CANNOT_BE_NULL = "cannot be null";
     @NotNull(message = CANNOT_BE_NULL)
     @NotBlank(message = "cannot be empty")
     private String name;
