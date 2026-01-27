@@ -14,6 +14,7 @@ import se.bastagruppen.todo_appen.model.ToDoList;
 import se.bastagruppen.todo_appen.repository.ToDoListRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -29,7 +30,7 @@ public class ToDoListEntryService {
 
         // TODO: make sure the list belongs to an authenticated user
         // if (!list.getOwner().getId().equals(authenticatedUserId)) {
-        //     throw new AccessDeniedException("This list id belongs to another user");
+        //     throw new ForbiddenException("This list id belongs to another user");
         // }
 
         ToDoListEntry entry = mapper.toEntity(dto);
@@ -52,12 +53,21 @@ public class ToDoListEntryService {
     }
 
     public List<ToDoListEntryResponseDto> getAllEntriesOfAList(Long listId) {
-        ToDoList list = listRepository.findById(listId)
-                .orElseThrow(() -> new ToDoListNotFoundException(listId));
+        // TODO: Change hard coded user id to logged in user
+        List<ToDoListEntry> entries = repository.findRootEntriesByListIdAndOwnerId(listId, 1L);
 
-        List<ToDoListEntry> entries = repository.findByListIdAndParentIsNull(listId);
+        if (entries.isEmpty()) {
+            throw new NotFoundException("The list is empty or you do not have permission");
+        }
 
         return entries.stream().map(mapper::toDto).toList();
     }
 
+    public void deleteEntryById(Long entryId) {
+        // TODO: Change hard coded user id to logged in user
+        ToDoListEntry entry = repository.findByIdWithOwner(entryId, 1L)
+                        .orElseThrow(() -> new NotFoundException("Entry not found or you do not have permission"));
+
+        repository.deleteById(entryId);
+    }
 }

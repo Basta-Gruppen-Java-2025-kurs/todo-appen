@@ -2,6 +2,7 @@ package se.bastagruppen.todo_appen.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import se.bastagruppen.todo_appen.dto.ToDoListEntryRequestDto;
@@ -30,6 +31,14 @@ public class ToDoListEntryController {
     // GET /entries/{entryId}
     // PUT /entries/{entryId}
     // PATCH /entries/{entryId}
-    // DELETE /entries/{entryId}
+
+    // DELETE entry
+    @DeleteMapping("/entries/{entryId}")
+    //@ResponseStatus(HttpStatus.NO_CONTENT)
+    public ResponseEntity<Void> deleteEntryById(@PathVariable Long entryId) {
+        service.deleteEntryById(entryId);
+
+       return ResponseEntity.noContent().build();
+    }
 
 }
