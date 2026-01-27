@@ -19,13 +19,15 @@ public class ToDoListEntryController {
 
     @PostMapping("/lists/{listId}/entries")
     public ResponseEntity<ToDoListEntryResponseDto> createToDoListEntry(@PathVariable Long listId, @Valid @RequestBody ToDoListEntryRequestDto dto) {
-        return ResponseEntity.ok(service.createToDoListEntry(listId, dto));
+        // TODO: Change hard coded user id to logged in user
+        return ResponseEntity.ok(service.createToDoListEntry(listId, dto, 1L));
     }
 
     // GET all entries including subentries for a list
     @GetMapping("/lists/{listId}/entries")
     public ResponseEntity<List<ToDoListEntryResponseDto>> getAllEntriesOfAList(@PathVariable Long listId) {
-        return ResponseEntity.ok(service.getAllEntriesOfAList(listId));
+        // TODO: Change hard coded user id to logged in user
+        return ResponseEntity.ok(service.getAllEntriesOfAList(listId, 1L));
     }
 
     // GET /entries/{entryId}
@@ -34,9 +36,9 @@ public class ToDoListEntryController {
 
     // DELETE entry
     @DeleteMapping("/entries/{entryId}")
-    //@ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> deleteEntryById(@PathVariable Long entryId) {
-        service.deleteEntryById(entryId);
+        // TODO: Change hard coded user id to logged in user
+        service.deleteEntryById(entryId, 1L);
 
        return ResponseEntity.noContent().build();
     }
