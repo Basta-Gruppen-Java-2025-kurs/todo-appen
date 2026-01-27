@@ -6,6 +6,7 @@ import se.bastagruppen.todo_appen.dto.ToDoListRequestDto;
 import se.bastagruppen.todo_appen.dto.ToDoListResponseDto;
 import se.bastagruppen.todo_appen.exception.ToDoListNotFoundException;
 import se.bastagruppen.todo_appen.mapper.ToDoListMapper;
+import se.bastagruppen.todo_appen.model.ToDoList;
 import se.bastagruppen.todo_appen.repository.ToDoListRepository;
 
 import java.util.List;
@@ -17,7 +18,9 @@ public class ToDoListService {
     private final ToDoListMapper mapper;
 
     public ToDoListResponseDto createToDoList(ToDoListRequestDto dto) {
-        return mapper.toDto(repository.save(mapper.toEntity(dto)));
+        ToDoList result = repository.save(mapper.toEntity(dto));
+        ToDoList fullResult = repository.findById(result.getId()).orElseThrow(() -> new ToDoListNotFoundException(result.getId()));
+        return mapper.toDto(fullResult);
     }
 
     public List<ToDoListResponseDto> getAllToDoLists() {
