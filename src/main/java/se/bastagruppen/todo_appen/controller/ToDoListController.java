@@ -30,4 +30,10 @@ public class ToDoListController {
     public ResponseEntity<ToDoListResponseDto> createToDoList(@Valid @RequestBody ToDoListRequestDto toDoListRequestDto) {
         return ResponseEntity.ok(service.createToDoList(toDoListRequestDto));
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteTodoList(@PathVariable Long id) {
+        service.deleteToDoList(id);
+        return ResponseEntity.noContent().build();
+    }
 }
