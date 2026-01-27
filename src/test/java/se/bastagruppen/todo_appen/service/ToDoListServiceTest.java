@@ -60,4 +60,19 @@ public class ToDoListServiceTest {
         assertEquals(testToDoList.getCatalog().getName(), responseDto.getCatalogName());
         assertEquals(testToDoList.getOwner().getUsername(), responseDto.getUsername());
     }
+
+    @Test
+    @DisplayName("Searching a TODO list by sets of parameters should call repository with correct parameters")
+    void searchTest() {
+        // all parameters are null
+        when(repository.search(null, null, null, null)).thenReturn(List.of(testToDoList));
+        List<ToDoListResponseDto> tls = service.search(null, null, null, null);
+        assertNotNull(tls);
+        assertFalse(tls.isEmpty());
+        assertEquals(testToDoList.getId(), tls.getFirst().getId());
+        // filter not empty
+
+        // all parameters are set
+        // each of the parameters is set
+    }
 }

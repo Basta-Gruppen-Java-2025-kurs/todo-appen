@@ -27,4 +27,9 @@ public class ToDoListService {
     public ToDoListResponseDto getById(Long id) {
         return mapper.toDto(repository.findById(id).orElseThrow(() -> new ToDoListNotFoundException(id)));
     }
+
+    public List<ToDoListResponseDto> search(Long userId, Long catalogId, String filter, List<String> tags) {
+        String filterString = (filter == null || filter.isEmpty()) ? null : "%" + filter + "%";
+        return repository.search(userId, catalogId, filterString, tags).stream().map(mapper::toDto).toList();
+    }
 }

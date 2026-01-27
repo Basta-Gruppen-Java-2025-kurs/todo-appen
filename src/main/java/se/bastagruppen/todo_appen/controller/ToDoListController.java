@@ -17,8 +17,14 @@ public class ToDoListController {
     private final ToDoListService service;
 
     @GetMapping
-    public ResponseEntity<List<ToDoListResponseDto>> getAllToDoLists() {
-        return ResponseEntity.ok(service.getAllToDoLists());
+    public ResponseEntity<List<ToDoListResponseDto>> getAllToDoLists(@RequestParam(required = false) @Valid Long userId,
+                                                                     @RequestParam(required = false) @Valid Long catalogId,
+                                                                     @RequestParam(required = false) @Valid String filter,
+                                                                     @RequestParam(required = false) @Valid List<String> tags) {
+        if (userId == null &&  catalogId == null && tags == null && filter == null) {
+            return ResponseEntity.ok(service.getAllToDoLists());
+        }
+        return ResponseEntity.ok(service.search(userId, catalogId, filter, tags));
     }
 
     @GetMapping("/{id}")
