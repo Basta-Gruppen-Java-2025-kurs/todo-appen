@@ -15,6 +15,7 @@ import se.bastagruppen.todo_appen.model.User;
         unmappedTargetPolicy = ReportingPolicy.IGNORE,
         unmappedSourcePolicy = ReportingPolicy.IGNORE)
 public interface ToDoListMapper {
+    @Mapping(source = "dto.userId", target = "ownerId")
     ToDoList toEntity(ToDoListRequestDto dto);
 
     @Mapping(source = "entity.tags", target = "tags")
