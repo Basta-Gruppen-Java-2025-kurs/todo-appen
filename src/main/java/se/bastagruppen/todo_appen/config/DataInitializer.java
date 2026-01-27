@@ -31,10 +31,6 @@ public class DataInitializer {
     public void init() {
         if (userRepository.count() > 0) return;
 
-        if (userRepository.count() > 0) {
-            return;
-        }
-
         /* ======== USERS ======== */
 
         User alice = new User();
@@ -113,7 +109,9 @@ public class DataInitializer {
         ToDoList list = new ToDoList();
         list.setName(name);
         list.setCatalog(catalog);
+        list.setCatalogId(catalog.getId());
         list.setOwner(owner);
+        list.setOwnerId(owner.getId());
         return listRepository.save(list);
     }
 
