@@ -1,11 +1,9 @@
 package se.bastagruppen.todo_appen.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Set;
 
@@ -15,6 +13,7 @@ import java.util.Set;
 @Table(name = "todo_lists", uniqueConstraints = {@UniqueConstraint(name = "UniqueListNamesForCatalog", columnNames = {"name", "catalog_id"})})
 @Getter
 @Setter
+@ToString
 public class ToDoList {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,11 +28,27 @@ public class ToDoList {
     @JsonManagedReference
     private Set<Tag> tags;
 
-    @ManyToOne
-    @JoinColumn(name = "catalog_id")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "catalog_id", insertable = false, updatable = false)
     private ToDoListCatalog catalog;
 
+    @Column(name = "catalog_id")
+    @JsonProperty("catalog_id")
+    private Long catalogId;
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", insertable = false, updatable = false)
     private User owner;
+
+    @Column(name = "user_id")
+    @JsonProperty("user_id")
+    private Long ownerId;
+
+    public ToDoList(Long id, String name, Set<Tag> tags, Long catalogId, Long ownerId) {
+        this.id = id;
+        this.name = name;
+        this.tags = tags;
+        this.catalogId = catalogId;
+        this.ownerId = ownerId;
+    }
 }
