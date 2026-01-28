@@ -125,6 +125,14 @@ POST /catalogs?userId=1&name=Work
 
 ---
 
+## 🧪 Testing
+Run all tests using Maven:
+```bash
+mvn test
+```
+
+---
+
 ## Branch Naming Policy
 To maintain a clean and organized Git workflow, all branches must follow a standard naming convention.
 The `main` branch is protected and should not be uesed for direct development.
