@@ -37,19 +37,92 @@ docker compose up --build
 
 ## 🧩 Structure
 
+### Endpoints
+### 🔐 Authentication (`/auth`)
+
+| Method | Endpoint | Description |
+|------|---------|-------------|
+| POST | `/auth/login` | Login with username & password, returns JWT |
+| POST | `/auth/logout` | Logout (invalidate JWT) |
+| GET  | `/auth/me` | Test endpoint for authenticated user |
+
+**Login request body**
+```json
+{
+  "username": "Alice",
+  "password": "password123"
+}
+```
+### 👤 Users ( `/users` )
+
+| Method | Endpoint | Description |
+|------|---------|-------------|
+| POST | `/users` | Create a new user |
+
+**Create user request body** 
+```json
+{
+  "username": "Alice",
+  "password": "password123"
+}
+```
+
+### 📁 Catalogs (`/catalogs`)
+
+| Method | Endpoint | Description |
+|------|---------|-------------|
+| POST | /catalogs | Create a catalog for a user |
+| GET  | /catalogs?userId={userId} | Get all catalogs for a user |
+
+**Create catalog (request params):**
+POST /catalogs?userId=1&name=Work
+
+### 📝 ToDo Lists (`/list`)
+
+| Method | Endpoint | Description |
+|------|---------|-------------|
+| GET  | /list | Get all todo lists |
+| GET  | /list/{id} | Get a specific todo list by id |
+| POST | /list | Create a new todo list |
+| PATCH | /list/{id}/rename | Rename a todo list |
+
+**Create todo list (request body)**
+```json
+{
+  "name": "Backend tasks",
+  "userId": 1,
+  "catalogId": 1
+}
+```
+
+**Rename todo list (request body)**
+```json
+{
+  "name": "New Name"
+}
+```
+### ✅ ToDo List Entries (`/lists/{listId}/entries`)
+
+| Method | Endpoint | Description |
+|--------|---------|-------------|
+| GET    | /lists/{listId}/entries | Get all entries (including subtasks) of a list |
+| POST   | /lists/{listId}/entries | Create a new entry in a list |
+| DELETE | /entries/{entryId} | Delete an entry by id |
+
+**Create entry (request body)**
+
+```json
+{
+  "summary": "Implement API",
+  "details": "Create controller and service",
+  "deadline": "2026-01-30",
+  "parentId": null
+}
+```
 ### Class Diagram
 ![Class Diagram](todoStructure.png)
 
-### Endpoints
-Endpoints will be documented here.
 
----
-
-## 🧪 Testing
-Run all tests using Maven:
-```bash
-mvn test
-```
 ---
 
 ## Branch Naming Policy
