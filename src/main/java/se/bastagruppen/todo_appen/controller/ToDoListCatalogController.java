@@ -8,7 +8,7 @@ import se.bastagruppen.todo_appen.service.ToDoListCatalogService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/catalogs")
+@RequestMapping("/catalogs")
 public class ToDoListCatalogController {
 
     private final ToDoListCatalogService catalogService;
