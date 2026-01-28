@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = false)
-public class ToDoListEntryDoneDto {
+public class ToDoListEntryUpdateDoneDto {
     @NotNull
     private Boolean done;
 }
