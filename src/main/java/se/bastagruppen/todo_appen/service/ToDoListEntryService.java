@@ -2,11 +2,12 @@ package se.bastagruppen.todo_appen.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import se.bastagruppen.todo_appen.dto.ToDoListEntryUpdateDoneDto;
 import se.bastagruppen.todo_appen.dto.ToDoListEntryRequestDto;
 import se.bastagruppen.todo_appen.dto.ToDoListEntryResponseDto;
+import se.bastagruppen.todo_appen.dto.ToDoListEntryUpdateDto;
 import se.bastagruppen.todo_appen.exception.BadRequestException;
 import se.bastagruppen.todo_appen.exception.NotFoundException;
-import se.bastagruppen.todo_appen.exception.ToDoListNotFoundException;
 import se.bastagruppen.todo_appen.mapper.ToDoListEntryMapper;
 import se.bastagruppen.todo_appen.model.ToDoListEntry;
 import se.bastagruppen.todo_appen.repository.ToDoListEntryRepository;
@@ -14,7 +15,6 @@ import se.bastagruppen.todo_appen.model.ToDoList;
 import se.bastagruppen.todo_appen.repository.ToDoListRepository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -53,6 +53,29 @@ public class ToDoListEntryService {
         List<ToDoListEntry> entries = repository.findByListIdAndParentIsNull(list.getId());
 
         return entries.stream().map(mapper::toDto).toList();
+    }
+
+    public ToDoListEntryResponseDto updateEntry(Long entryId, Long userId, ToDoListEntryUpdateDto dto) {
+        ToDoListEntry existing = repository.findByIdWithOwner(entryId, userId)
+                .orElseThrow(() -> new NotFoundException("Entry not found or you do not have permission"));
+
+        existing.setSummary(dto.getSummary());
+        existing.setDetails(dto.getDetails());
+        existing.setDeadline(dto.getDeadline());
+        existing.setDone(dto.getDone());
+
+        ToDoListEntry saved = repository.save(existing);
+
+        return mapper.toDto(saved);
+    }
+
+    public void updateDone(Long entryId, Long userId, ToDoListEntryUpdateDoneDto dto) {
+        ToDoListEntry existing = repository.findByIdWithOwner(entryId, userId)
+                .orElseThrow(() -> new NotFoundException("Entry not found or you do not have permission"));
+
+        existing.setDone(dto.getDone());
+
+        repository.save(existing);
     }
 
     public void deleteEntryById(Long entryId, Long userId) {
