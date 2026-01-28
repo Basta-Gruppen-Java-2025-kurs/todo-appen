@@ -18,6 +18,8 @@ git clone https://github.com/yourusername/todo-api.git
 ```env
 TODO_USER=root
 TODO_PASSWORD=yourpassword
+
+JWT_SECRET=THIS_IS_A_32_CHAR_MINIMUM_SECRET_KEY_PUT_YOURS_HERE
 ```
 4. Run the application with Maven:
 ```bash
