@@ -2,6 +2,7 @@ package se.bastagruppen.todo_appen.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import se.bastagruppen.todo_appen.dto.ToDoListEntryDoneDto;
 import se.bastagruppen.todo_appen.dto.ToDoListEntryRequestDto;
 import se.bastagruppen.todo_appen.dto.ToDoListEntryResponseDto;
 import se.bastagruppen.todo_appen.exception.BadRequestException;
@@ -55,7 +56,16 @@ public class ToDoListEntryService {
         return entries.stream().map(mapper::toDto).toList();
     }
 
-    public void deleteEntryById(Long entryId, Long userId) {
+    public void updateDone(Long entryId, Long userId, ToDoListEntryDoneDto dto) {
+        ToDoListEntry entry = repository.findByIdWithOwner(entryId, userId)
+                .orElseThrow(() -> new NotFoundException("Entry not found or you do not have permission"));
+
+        entry.setDone(dto.getDone());
+
+        repository.save(entry);
+    }
+
+    public void deleteEntry(Long entryId, Long userId) {
         ToDoListEntry entry = repository.findByIdWithOwner(entryId, userId)
                         .orElseThrow(() -> new NotFoundException("Entry not found or you do not have permission"));
 
