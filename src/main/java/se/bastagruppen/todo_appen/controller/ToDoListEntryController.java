@@ -23,7 +23,6 @@ public class ToDoListEntryController {
             @PathVariable Long listId,
             @Valid @RequestBody ToDoListEntryRequestDto dto,
             @AuthenticationPrincipal CustomPrincipal user) {
-        System.out.println(user.getUserId());
         return ResponseEntity.ok(service.createToDoListEntry(listId, dto, user.getUserId()));
     }
 
@@ -32,7 +31,6 @@ public class ToDoListEntryController {
     public ResponseEntity<List<ToDoListEntryResponseDto>> getAllEntriesOfAList(
             @PathVariable Long listId,
             @AuthenticationPrincipal CustomPrincipal user) {
-        System.out.println(user.getUserId());
         return ResponseEntity.ok(service.getAllEntriesOfAList(listId, user.getUserId()));
     }
 
