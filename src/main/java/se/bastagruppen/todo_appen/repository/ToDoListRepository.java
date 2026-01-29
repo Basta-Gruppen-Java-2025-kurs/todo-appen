@@ -7,6 +7,8 @@ import se.bastagruppen.todo_appen.model.ToDoList;
 
 import java.util.List;
 
+import java.util.Optional;
+
 public interface ToDoListRepository extends JpaRepository<ToDoList, Long> {
     @Query("SELECT DISTINCT tl FROM ToDoList tl JOIN tl.tags t " +
                                         "WHERE (:userId IS NULL OR tl.owner.id = :userId) " +
@@ -32,4 +34,12 @@ public interface ToDoListRepository extends JpaRepository<ToDoList, Long> {
     @Query("SELECT DISTINCT tl FROM ToDoList tl JOIN tl.tags t " +
             "WHERE (:tags IS NULL OR t.name IN (:tags))")
     List<ToDoList> searchByTags(@Param("tags") List<String> tags);
+    boolean existsByCatalogIdAndName(Long catalogId, String name);
+
+    @Query("""
+    SELECT l FROM ToDoList l
+    WHERE l.id = :listId
+    AND l.owner.id = :userId
+    """)
+    Optional<ToDoList> findByIdAndOwnerId(Long listId, Long userId);
 }

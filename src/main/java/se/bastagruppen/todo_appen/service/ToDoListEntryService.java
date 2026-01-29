@@ -14,6 +14,7 @@ import se.bastagruppen.todo_appen.model.ToDoList;
 import se.bastagruppen.todo_appen.repository.ToDoListRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -22,15 +23,9 @@ public class ToDoListEntryService {
     private final ToDoListRepository listRepository;
     private final ToDoListEntryMapper mapper;
 
-    public ToDoListEntryResponseDto createToDoListEntry(Long listId, ToDoListEntryRequestDto dto) {
-
-        ToDoList list = listRepository.findById(listId)
-                .orElseThrow(() -> new ToDoListNotFoundException(listId));
-
-        // TODO: make sure the list belongs to an authenticated user
-        // if (!list.getOwner().getId().equals(authenticatedUserId)) {
-        //     throw new AccessDeniedException("This list id belongs to another user");
-        // }
+    public ToDoListEntryResponseDto createToDoListEntry(Long listId, ToDoListEntryRequestDto dto, Long userId) {
+        ToDoList list = listRepository.findByIdAndOwnerId(listId, userId)
+                .orElseThrow(() -> new NotFoundException("List not found or you do not have permission"));
 
         ToDoListEntry entry = mapper.toEntity(dto);
         entry.setList(list);
@@ -51,13 +46,19 @@ public class ToDoListEntryService {
         return mapper.toDto(saved);
     }
 
-    public List<ToDoListEntryResponseDto> getAllEntriesOfAList(Long listId) {
-        ToDoList list = listRepository.findById(listId)
-                .orElseThrow(() -> new ToDoListNotFoundException(listId));
+    public List<ToDoListEntryResponseDto> getAllEntriesOfAList(Long listId, Long userId) {
+        ToDoList list = listRepository.findByIdAndOwnerId(listId, userId)
+                .orElseThrow(() -> new NotFoundException("List not found or you do not have permission"));
 
-        List<ToDoListEntry> entries = repository.findByListIdAndParentIsNull(listId);
+        List<ToDoListEntry> entries = repository.findByListIdAndParentIsNull(list.getId());
 
         return entries.stream().map(mapper::toDto).toList();
     }
 
+    public void deleteEntryById(Long entryId, Long userId) {
+        ToDoListEntry entry = repository.findByIdWithOwner(entryId, userId)
+                        .orElseThrow(() -> new NotFoundException("Entry not found or you do not have permission"));
+
+        repository.deleteById(entryId);
+    }
 }

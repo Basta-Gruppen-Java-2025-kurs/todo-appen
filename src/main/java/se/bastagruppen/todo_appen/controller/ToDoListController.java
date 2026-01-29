@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import se.bastagruppen.todo_appen.dto.ToDoListRequestDto;
 import se.bastagruppen.todo_appen.dto.ToDoListResponseDto;
+import se.bastagruppen.todo_appen.dto.ToDoListRenameRequestDto;
 import se.bastagruppen.todo_appen.service.ToDoListService;
 
 import java.util.List;
@@ -35,5 +36,11 @@ public class ToDoListController {
     @PostMapping
     public ResponseEntity<ToDoListResponseDto> createToDoList(@Valid @RequestBody ToDoListRequestDto toDoListRequestDto) {
         return ResponseEntity.ok(service.createToDoList(toDoListRequestDto));
+    }
+
+    @PatchMapping("/{id}/rename")
+    public ResponseEntity<ToDoListResponseDto> renameToDoList(@PathVariable Long id,
+                                                          @Valid @RequestBody ToDoListRenameRequestDto toDoListRenameDto) {
+        return ResponseEntity.ok(service.renameToDoList(id, toDoListRenameDto.getName()));
     }
 }
