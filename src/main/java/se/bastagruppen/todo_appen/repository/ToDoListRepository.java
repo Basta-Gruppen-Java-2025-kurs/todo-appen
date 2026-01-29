@@ -12,10 +12,10 @@ public interface ToDoListRepository extends JpaRepository<ToDoList, Long> {
                                         "WHERE (:userId IS NULL OR tl.owner.id = :userId) " +
                                         "AND (:catalogId IS NULL OR tl.catalog.id = :catalogId) " +
                                         "AND (:filter IS NULL OR tl.name LIKE :filter) " +
-                                        "AND (COALESCE(:tags) IS NULL OR t.name IN (:tags))")
+                                        "AND (:tags IS NULL OR t.name IN (:tags))")
     List<ToDoList> search(@Param("userId") Long userId, @Param("catalogId") Long catalogId, @Param("filter") String filter, @Param("tags") List<String> tags);
 
-    @Query("SELECT DISTINCT tl FROM ToDoList tl JOIN tl.tags t " +
+    @Query("SELECT DISTINCT tl FROM ToDoList tl " +
             "WHERE (:userId IS NULL OR tl.owner.id = :userId) " +
             "AND (:catalogId IS NULL OR tl.catalog.id = :catalogId) " +
             "AND (:filter IS NULL OR tl.name LIKE :filter)")

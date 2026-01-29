@@ -47,7 +47,7 @@ public class ToDoListServiceTest {
         testUser = new User(1L, "Tester Joe", "qiuow1111", List.of(), List.of());
         testTag = new Tag(1L, "test tag", testUser);
         testCatalog = new ToDoListCatalog(1L, "Test Catalog", testUser);
-        testToDoList = new ToDoList(1L, "Test TODO list", Set.of(testTag), 1L, 1L);
+        testToDoList = new ToDoList(1L, "Test TODO list", Set.of(testTag), testCatalog, testUser);
     }
 
     @Test

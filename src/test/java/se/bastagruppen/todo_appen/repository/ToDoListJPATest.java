@@ -37,7 +37,7 @@ public class ToDoListJPATest {
     @Autowired
     private TagRepository tagRepository;
 
-    private User user;
+    private User user, user2;
     private ToDoListCatalog catalog;
     private Tag tag;
 
@@ -65,10 +65,18 @@ public class ToDoListJPATest {
 
         ToDoList toDoList = new ToDoList();
         toDoList.setCatalog(catalog);
+        toDoList.setCatalogId(catalog.getId());
         toDoList.setOwner(user);
+        toDoList.setOwnerId(user.getId());
         toDoList.setName("Test List 1");
         toDoList.setTags(Set.of(tag));
         repository.save(toDoList);
+
+        // add a second user
+        User user2ToSave = new User();
+        user2ToSave.setUsername("Bullwinkle");
+        user2ToSave.setPassword("somepassword123");
+        user2 = userRepository.save(user2ToSave);
     }
 
     @Test
@@ -88,6 +96,8 @@ public class ToDoListJPATest {
         toDoList.setName("Abracadabra");
         toDoList.setOwner(user);
         toDoList.setCatalog(catalog);
+        toDoList.setOwnerId(user.getId());
+        toDoList.setCatalogId(catalog.getId());
         ToDoList savedList = repository.save(toDoList);
         assertNotNull(savedList);
         assertEquals(savedList.getName(), toDoList.getName());
@@ -95,11 +105,46 @@ public class ToDoListJPATest {
 
     @Test
     @DisplayName("Repository can search by parameters")
-    void searchByParametersTest() {
+    void searchByAllParametersTest() {
+        final Long  user1Id = user.getId(),
+                user2Id = user2.getId(),
+                catalog1Id = catalog.getId();
+
         List<ToDoList> tl = repository.search(null, null, null, null);
         log.info(tl.toString());
         assertNotNull(tl);
         assertFalse(tl.isEmpty());
+
+        // search with existing userId
+        List<ToDoList> tl1 = repository.search(user1Id, null, null, null);
+        assertNotNull(tl1);
+        assertFalse(tl1.isEmpty());
+
+        // search with wrong userId
+        List<ToDoList> tl2 = repository.search(777L, null, null, null);
+        assertNotNull(tl2);
+        assertTrue(tl2.isEmpty());
+
+        // search with existing catalogId
+        List<ToDoList> tl3 = repository.search(null, catalog1Id, null, null);
+        assertNotNull(tl3);
+        assertFalse(tl3.isEmpty());
+
+        // search with wrong catalogId
+        List<ToDoList> tl4 = repository.search(null, 777L, null, null);
+        assertNotNull(tl4);
+        assertTrue(tl4.isEmpty());
+
+        // search with mismatching userId and catalogId
+        List<ToDoList> tl5 = repository.search(user2Id, catalog1Id, null, null);
+        assertNotNull(tl5);
+        assertTrue(tl5.isEmpty());
+
+        // search with matching userId and catalogId
+        List<ToDoList> tl6 = repository.search(user1Id, catalog1Id, null, null);
+        assertNotNull(tl6);
+        assertFalse(tl6.isEmpty());
+
     }
 
     @Test
@@ -129,6 +174,83 @@ public class ToDoListJPATest {
         log.info(tl5.toString());
         assertNotNull(tl5);
         assertFalse(tl5.isEmpty());
+    }
+
+    @Test
+    @DisplayName("Repository can search by a list of tags")
+    void searchByListOfTagsTest() {
+        // search with empty criteria
+        List<ToDoList> tl = repository.searchByTags(null);
+        assertNotNull(tl);
+        assertFalse(tl.isEmpty());
+
+        // search with an empty list of tags
+        List<ToDoList> tl2 = repository.searchByTags(List.of());
+        assertNotNull(tl2);
+        assertTrue(tl2.isEmpty());
+
+        // search with a tag name that exists
+        List<ToDoList> tl3 = repository.searchByTags(List.of(tag.getName()));
+        assertNotNull(tl3);
+        assertFalse(tl3.isEmpty());
+        assertTrue(tl3.stream().map(ToDoList::getTags).allMatch(tags -> tags.stream().map(Tag::getName).anyMatch(tag.getName()::equals)));
+
+        // search with a tag name that doesn't exist
+        List<ToDoList> tlDNE = repository.searchByTags(List.of("%sjnj%"));
+        assertNotNull(tlDNE);
+        assertTrue(tlDNE.isEmpty());
+    }
+
+    @Test
+    @DisplayName("Repository can search by other parameters than tags")
+    void searchByOtherParametersTest() {
+        final Long  user1Id = user.getId(),
+                    user2Id = user2.getId(),
+                    catalog1Id = catalog.getId();
+
+        // search with all nulls
+        List<ToDoList> tl = repository.searchByParams(null, null, null);
+        assertNotNull(tl);
+        assertFalse(tl.isEmpty());
+        log.info(tl.toString());
+
+        // search with existing userId
+        List<ToDoList> tl1 = repository.searchByParams(user1Id, null, null);
+        assertNotNull(tl1);
+        assertFalse(tl1.isEmpty());
+
+        // search with wrong userId
+        List<ToDoList> tl2 = repository.searchByParams(777L, null, null);
+        assertNotNull(tl2);
+        assertTrue(tl2.isEmpty());
+
+        // search with existing catalogId
+        List<ToDoList> tl3 = repository.searchByParams(null, catalog1Id, null);
+        assertNotNull(tl3);
+        assertFalse(tl3.isEmpty());
+
+        // search with wrong catalogId
+        List<ToDoList> tl4 = repository.searchByParams(null, 777L, null);
+        assertNotNull(tl4);
+        assertTrue(tl4.isEmpty());
+
+        // search with mismatching userId and catalogId
+        List<ToDoList> tl5 = repository.searchByParams(user2Id, catalog1Id, null);
+        assertNotNull(tl5);
+        assertTrue(tl5.isEmpty());
+
+        // search with matching userId and catalogId
+        List<ToDoList> tl6 = repository.searchByParams(user1Id, catalog1Id, null);
+        assertNotNull(tl6);
+        assertFalse(tl6.isEmpty());
+
+        // search with filter
+
+        // search with filter and userId
+
+        // search with filter and catalogId
+
+        // search with all params
     }
 
 }
