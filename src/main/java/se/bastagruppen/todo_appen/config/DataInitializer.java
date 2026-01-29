@@ -3,6 +3,7 @@ package se.bastagruppen.todo_appen.config;
 import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import se.bastagruppen.todo_appen.model.ToDoList;
@@ -18,6 +19,7 @@ import java.time.LocalDate;
 
 @Component
 @RequiredArgsConstructor
+@Profile("!test")
 public class DataInitializer {
 
     private final UserRepository userRepository;
