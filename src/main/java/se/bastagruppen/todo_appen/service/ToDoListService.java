@@ -28,11 +28,7 @@ public class ToDoListService {
             throw new IllegalArgumentException("A list with this name already exists in the catalog");
         }
 
-//        ToDoList list = mapper.toEntity(dto);
-//        list.setCatalog(catalog);
-        ToDoList result = repository.save(mapper.toEntity(dto));
-        ToDoList fullResult = repository.findById(result.getId()).orElseThrow(() -> new ToDoListNotFoundException(result.getId()));
-        return mapper.toDto(fullResult);
+        return mapper.toDto(repository.save(mapper.toEntity(dto)));
     }
 
     public List<ToDoListResponseDto> getAllToDoLists() {
@@ -45,7 +41,18 @@ public class ToDoListService {
 
     public List<ToDoListResponseDto> search(Long userId, Long catalogId, String filter, List<String> tags) {
         String filterString = (filter == null || filter.isEmpty()) ? null : "%" + filter + "%";
-        return repository.search(userId, catalogId, filterString, tags).stream().map(mapper::toDto).toList();
+        List <ToDoList> result;
+
+        if (tags == null) {
+            result = repository.searchByParams(userId, catalogId, filterString);
+        } else if (userId == null && catalogId == null && filterString == null) {
+            result = repository.search(userId, catalogId, filterString, tags);
+        } else if (tags.size() < 2) {
+            result = repository.searchByTag(tags.getFirst());
+        } else {
+            result = repository.searchByTags(tags);
+        }
+        return result.stream().map(mapper::toDto).toList();
     }
 
     public ToDoListResponseDto renameToDoList(Long id, String newName) {
