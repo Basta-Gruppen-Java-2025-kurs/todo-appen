@@ -57,6 +57,7 @@ public class ToDoList {
         this.id = id;
         this.name = name;
         this.tags = tags;
+        this.entries = new ArrayList<>();
         this.catalogId = catalogId;
         this.ownerId = ownerId;
     }
