@@ -30,19 +30,19 @@ public class ToDoList {
     @JsonManagedReference
     private Set<Tag> tags;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false, targetEntity = ToDoListCatalog.class)
     @JoinColumn(name = "catalog_id", insertable = false, updatable = false)
     private ToDoListCatalog catalog;
 
-    @Column(name = "catalog_id")
+    @Column(name = "catalog_id", nullable = false)
     @JsonProperty("catalog_id")
     private Long catalogId;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false, targetEntity = User.class)
     @JoinColumn(name = "user_id", insertable = false, updatable = false)
     private User owner;
 
-    @Column(name = "user_id")
+    @Column(name = "user_id", nullable = false)
     @JsonProperty("user_id")
     private Long ownerId;
 
@@ -60,5 +60,15 @@ public class ToDoList {
         this.entries = new ArrayList<>();
         this.catalogId = catalogId;
         this.ownerId = ownerId;
+    }
+
+    public ToDoList(Long id, String name, Set<Tag> tags, ToDoListCatalog catalog, User owner) {
+        this.id = id;
+        this.name = name;
+        this.tags = tags;
+        this.catalog = catalog;
+        this.catalogId = catalog.getId();
+        this.owner = owner;
+        this.ownerId = owner.getId();
     }
 }

@@ -2,6 +2,7 @@ package se.bastagruppen.todo_appen.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import se.bastagruppen.todo_appen.dto.ToDoListRequestDto;
@@ -11,6 +12,7 @@ import se.bastagruppen.todo_appen.service.ToDoListService;
 
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("/list")
 @RequiredArgsConstructor
@@ -18,8 +20,15 @@ public class ToDoListController {
     private final ToDoListService service;
 
     @GetMapping
-    public ResponseEntity<List<ToDoListResponseDto>> getAllToDoLists() {
-        return ResponseEntity.ok(service.getAllToDoLists());
+    public ResponseEntity<List<ToDoListResponseDto>> getAllToDoLists(@RequestParam(required = false) @Valid Long userId,
+                                                                     @RequestParam(required = false) @Valid Long catalogId,
+                                                                     @RequestParam(required = false) @Valid String filter,
+                                                                     @RequestParam(required = false) @Valid List<String> tags) {
+        if (userId == null &&  catalogId == null && tags == null && filter == null) {
+            return ResponseEntity.ok(service.getAllToDoLists());
+        }
+        log.info("Searching for userId: " + userId + " and catalogId: " + catalogId + " and tags: " + tags + " and filter: " + filter);
+        return ResponseEntity.ok(service.search(userId, catalogId, filter, tags));
     }
 
     @GetMapping("/{id}")
@@ -32,7 +41,7 @@ public class ToDoListController {
         return ResponseEntity.ok(service.createToDoList(toDoListRequestDto));
     }
 
-    @PatchMapping("/{id}/rename")
+    @PatchMapping("/{id}")
     public ResponseEntity<ToDoListResponseDto> renameToDoList(@PathVariable Long id,
                                                           @Valid @RequestBody ToDoListRenameRequestDto toDoListRenameDto) {
         return ResponseEntity.ok(service.renameToDoList(id, toDoListRenameDto.getName()));    

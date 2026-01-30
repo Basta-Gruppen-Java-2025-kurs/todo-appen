@@ -1,19 +1,12 @@
 @startuml
 'https://plantuml.com/class-diagram
 
-class Database {
-}
-
-entity Tag {
-    Long Id
-    String name
-}
-
 entity ToDoListCatalog {
     Long Id
     String name
     List <ToDoList> toDoLists
     List <Tag> tags
+    User user
 }
 
 entity ToDoList {
@@ -21,6 +14,7 @@ entity ToDoList {
     String name
     List <ToDoListEntry> entries
     List <Tag> tags
+    User owner
 }
 
 entity ToDoListEntry {
@@ -33,6 +27,12 @@ entity ToDoListEntry {
     Date deadline
     List <ToDoListEntry> subTasks
     List <Tag> tags
+}
+
+entity Tag {
+    Long Id
+    String name
+    User owner
 }
 
 enum RepeatPeriod {
@@ -54,12 +54,13 @@ entity User {
 
 User ||--|{ ToDoListCatalog
 User ||--|{ Tag
+User ||--|{ ToDoList
 ToDoListCatalog ||--|{ ToDoList
 ToDoList ||--|{ ToDoListEntry
 ToDoListEntry ||--|{ ToDoListEntry
-ToDoListCatalog ||--|{ Tag
-ToDoList ||--|{ Tag
-ToDoListEntry ||--|{ Tag
+ToDoListCatalog }|--|{ Tag
+ToDoList }|--|{ Tag
+ToDoListEntry }|--|{ Tag
 ToDoListEntry --> RepeatPeriod
 
 @enduml
