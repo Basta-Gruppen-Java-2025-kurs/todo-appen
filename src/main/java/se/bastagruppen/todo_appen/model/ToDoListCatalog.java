@@ -24,6 +24,15 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ToDoListCatalog {
+
+    public ToDoListCatalog(Long id, String name, User user) {
+        this.id = id;
+        this.name = name;
+        this.user = user;
+        this.lists = new ArrayList<>();
+    }
+
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
