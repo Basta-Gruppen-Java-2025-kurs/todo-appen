@@ -2,11 +2,12 @@ package se.bastagruppen.todo_appen.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import se.bastagruppen.todo_appen.dto.ToDoListEntryUpdateDoneDto;
 import se.bastagruppen.todo_appen.dto.ToDoListEntryRequestDto;
 import se.bastagruppen.todo_appen.dto.ToDoListEntryResponseDto;
+import se.bastagruppen.todo_appen.dto.ToDoListEntryUpdateDto;
 import se.bastagruppen.todo_appen.service.ToDoListEntryService;
 
 import java.util.List;
@@ -31,12 +32,26 @@ public class ToDoListEntryController {
     }
 
     // GET /entries/{entryId}
-    // PUT /entries/{entryId}
-    // PATCH /entries/{entryId}
 
-    // DELETE entry
+    // PUT /entries/{entryId}
+    @PutMapping("/entries/{entryId}")
+    public ResponseEntity<ToDoListEntryResponseDto> updateEntry(@PathVariable Long entryId, @RequestBody @Valid ToDoListEntryUpdateDto dto) {
+        // TODO: Change hard coded user id to logged in user
+
+        return ResponseEntity.ok(service.updateEntry(entryId, 1L, dto));
+    }
+
+
+    @PatchMapping("/entries/{entryId}")
+    public ResponseEntity<Void> updateDone(@PathVariable Long entryId, @RequestBody @Valid ToDoListEntryUpdateDoneDto dto) {
+        // TODO: Change hard coded user id to logged in user
+        service.updateDone(entryId, 1L, dto);
+
+        return ResponseEntity.noContent().build();
+    }
+
     @DeleteMapping("/entries/{entryId}")
-    public ResponseEntity<Void> deleteEntryById(@PathVariable Long entryId) {
+    public ResponseEntity<Void> deleteEntry(@PathVariable Long entryId) {
         // TODO: Change hard coded user id to logged in user
         service.deleteEntryById(entryId, 1L);
 

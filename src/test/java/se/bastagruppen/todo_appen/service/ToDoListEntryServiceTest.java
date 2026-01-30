@@ -1,5 +1,6 @@
 package se.bastagruppen.todo_appen.service;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -7,6 +8,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import se.bastagruppen.todo_appen.dto.ToDoListEntryRequestDto;
 import se.bastagruppen.todo_appen.dto.ToDoListEntryResponseDto;
+import se.bastagruppen.todo_appen.dto.ToDoListEntryUpdateDoneDto;
 import se.bastagruppen.todo_appen.exception.BadRequestException;
 import se.bastagruppen.todo_appen.exception.NotFoundException;
 import se.bastagruppen.todo_appen.mapper.ToDoListEntryMapper;
@@ -36,19 +38,28 @@ public class ToDoListEntryServiceTest {
     @InjectMocks
     private ToDoListEntryService service;
 
+    Long entryId = 12L;
+    Long listId = 1L;
+    Long userId = 123L;
+
+    private ToDoList list;
+    private ToDoListEntry entry;
+
+    @BeforeEach
+    void setUp() {
+        list = new ToDoList();
+        list.setId(listId);
+        entry = new ToDoListEntry();
+        entry.setId(entryId);
+        entry.setDone(false);
+    }
+
 
     @Test
     void createToDoListEntry_shouldCreateEntry_whenUserOwnsList() {
-        Long listId = 1L;
-        Long userId = 42L;
-
         ToDoListEntryRequestDto dto = new ToDoListEntryRequestDto();
         dto.setParentId(null);
 
-        ToDoList list = new ToDoList();
-        list.setId(listId);
-
-        ToDoListEntry entry = new ToDoListEntry();
         ToDoListEntry saved = new ToDoListEntry();
         ToDoListEntryResponseDto responseDto = new ToDoListEntryResponseDto();
 
@@ -69,8 +80,6 @@ public class ToDoListEntryServiceTest {
 
     @Test
     void createToDoListEntry_shouldThrowNotFound_whenListNotOwned() {
-        Long listId = 1L;
-        Long userId = 42L;
         ToDoListEntryRequestDto dto = new ToDoListEntryRequestDto();
 
         when(listRepository.findByIdAndOwnerId(listId, userId))
@@ -84,22 +93,14 @@ public class ToDoListEntryServiceTest {
 
     @Test
     void createToDoListEntry_shouldThrowBadRequest_whenParentInDifferentList() {
-        Long listId = 1L;
-        Long userId = 42L;
-
         ToDoListEntryRequestDto dto = new ToDoListEntryRequestDto();
         dto.setParentId(99L);
-
-        ToDoList list = new ToDoList();
-        list.setId(listId);
 
         ToDoList otherList = new ToDoList();
         otherList.setId(2L);
 
         ToDoListEntry parent = new ToDoListEntry();
         parent.setList(otherList);
-
-        ToDoListEntry entry = new ToDoListEntry();
 
         when(listRepository.findByIdAndOwnerId(listId, userId))
                 .thenReturn(Optional.of(list));
@@ -114,15 +115,6 @@ public class ToDoListEntryServiceTest {
 
     @Test
     void getAllEntriesOfAList_shouldReturnEntries() {
-        Long listId = 1L;
-        Long userId = 10L;
-
-        ToDoList list = new ToDoList();
-        list.setId(listId);
-
-        ToDoListEntry entry = new ToDoListEntry();
-        entry.setId(5L);
-
         ToDoListEntryResponseDto responseDto = new ToDoListEntryResponseDto();
 
         when(listRepository.findByIdAndOwnerId(listId, userId))
@@ -143,9 +135,6 @@ public class ToDoListEntryServiceTest {
 
     @Test
     void getAllEntriesOfAList_shouldThrowNotFound_whenListNotOwned() {
-        Long listId = 1L;
-        Long userId = 42L;
-
         when(listRepository.findByIdAndOwnerId(listId, userId))
                 .thenReturn(Optional.empty());
 
@@ -159,12 +148,6 @@ public class ToDoListEntryServiceTest {
 
     @Test
     void deleteEntryById_shouldDelete_whenUserOwnsEntry() {
-        Long entryId = 10L;
-        Long userId = 42L;
-
-        ToDoListEntry entry = new ToDoListEntry();
-        entry.setId(entryId);
-
         when(repository.findByIdWithOwner(entryId, userId))
                 .thenReturn(Optional.of(entry));
 
@@ -176,9 +159,6 @@ public class ToDoListEntryServiceTest {
 
     @Test
     void deleteEntryById_shouldThrowNotFound_whenEntryNotFoundOrNotOwned() {
-        Long entryId = 10L;
-        Long userId = 42L;
-
         when(repository.findByIdWithOwner(entryId, userId))
                 .thenReturn(Optional.empty());
 
@@ -187,5 +167,54 @@ public class ToDoListEntryServiceTest {
 
         verify(repository).findByIdWithOwner(entryId, userId);
         verify(repository, never()).deleteById(anyLong());
+    }
+
+    @Test
+    void updateDone_happyPath_shouldSetDoneTrue() {
+        ToDoListEntryUpdateDoneDto dto = new ToDoListEntryUpdateDoneDto(true);
+
+        when(repository.findByIdWithOwner(entryId, userId))
+                .thenReturn(Optional.of(entry));
+       when(repository.save(entry)).thenReturn(entry);
+
+        service.updateDone(entryId, userId, dto);
+
+        assertTrue(entry.getDone());
+        verify(repository).save(entry);
+    }
+
+    @Test
+    void updateDone_entryNotFound_shouldThrowNotFoundException() {
+        ToDoListEntryUpdateDoneDto dto = new ToDoListEntryUpdateDoneDto(true);
+        when(repository.findByIdWithOwner(entryId, userId))
+                .thenReturn(Optional.empty());
+
+        NotFoundException ex = assertThrows(NotFoundException.class,
+                () -> service.updateDone(entryId, userId, dto));
+        assertEquals("Entry not found or you do not have permission", ex.getMessage());
+
+        verify(repository, never()).save(any());
+    }
+
+    @Test
+    void deleteEntryById_entryExists_shouldCallRepositoryDelete() {
+        when(repository.findByIdWithOwner(entryId, userId))
+                .thenReturn(Optional.of(entry));
+
+        service.deleteEntryById(entryId, userId);
+
+        verify(repository).deleteById(entryId);
+    }
+
+    @Test
+    void deleteEntryById_entryNotFound_shouldThrowNotFoundException() {
+        when(repository.findByIdWithOwner(entryId, userId))
+                .thenReturn(Optional.empty());
+
+        NotFoundException ex = assertThrows(NotFoundException.class,
+                () -> service.deleteEntryById(entryId, userId));
+
+        assertEquals("Entry not found or you do not have permission", ex.getMessage());
+        verify(repository, never()).deleteById(any());
     }
 }
