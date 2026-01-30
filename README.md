@@ -11,24 +11,29 @@ The API is secured using JWT authentication.
 ### ▶️ Run Locally
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/todo-api.git
+git clone https://github.com/Basta-Gruppen-Java-2025-kurs/todo-appen.git
 ```
 2. Create an environment file
-3. Configure environment variables in .env:
+3. Configure environment variables in `.env`:
 ```env
 TODO_USER=root
 TODO_PASSWORD=yourpassword
 
 JWT_SECRET=THIS_IS_A_32_CHAR_MINIMUM_SECRET_KEY_PUT_YOURS_HERE
 ```
-4. Run the application with Maven:
+4. Run the application with **Maven**:
 ```bash
 mvn spring-boot:run
 ```
 
+Note: if you are using **MariaDB** instead of **MySQL**, run the app this way:
+```bash
+mvn spring-boot:run -Pmariadb
+```
+
 ### ▶️ Run with Docker
-1. Make sure Docker is installed.
-2. Build and start containers:
+1. Make sure **Docker** is installed.
+2. To build and start containers, run this from the project's root folder:
 ```bash
 docker compose up --build
 ```
@@ -79,12 +84,13 @@ POST /catalogs?userId=1&name=Work
 
 ### 📝 ToDo Lists (`/list`)
 
-| Method | Endpoint | Description |
-|------|---------|-------------|
-| GET  | /list | Get all todo lists |
-| GET  | /list/{id} | Get a specific todo list by id |
-| POST | /list | Create a new todo list |
-| PATCH | /list/{id}/rename | Rename a todo list |
+| Method | Endpoint | Description                                                               |
+|------|---------|---------------------------------------------------------------------------|
+| GET  | /list | Without parameters &mdash; get all todo lists                             |
+| GET  | /list?userId=1&catalogId=1&filter=pattern&tags=one,two,three | With parameters: search by criteria |
+| GET  | /list/{id} | Get a specific todo list by id                                            |
+| POST | /list | Create a new todo list                                                    |
+| PATCH | /list/{id}/rename | Rename a todo list                                                        |
 
 **Create todo list (request body)**
 ```json
@@ -101,6 +107,20 @@ POST /catalogs?userId=1&name=Work
   "name": "New Name"
 }
 ```
+
+**Search by criteria**
+
+To search by criteria, use `GET` with `/list` endpoint with any combination of the following parameters in the URL:
+
+| Parameter | Usage |
+|-----------|-------|
+|
+Examples:
+
+`GET /list?/list?userId=1&catalogId=1&filter=pattern` &mdash; search for all lists that belong to the user with id=1 that are in catalog with id=1, and the list name contains the substring "pattern".
+
+`GET /list?/list?tags=one,two,three` &mdash; search for all lists that have these 3 tags: "one", "two", "three"
+
 ### ✅ ToDo List Entries (`/lists/{listId}/entries`)
 
 | Method | Endpoint | Description |
