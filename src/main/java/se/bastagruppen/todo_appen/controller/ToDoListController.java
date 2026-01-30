@@ -41,19 +41,26 @@ public class ToDoListController {
     }
 
     @PostMapping
-    public ResponseEntity<ToDoListResponseDto> createToDoList(@Valid @RequestBody ToDoListRequestDto toDoListRequestDto) {
+    public ResponseEntity<ToDoListResponseDto> createToDoList(@Valid @RequestBody ToDoListRequestDto toDoListRequestDto,
+                                                              @AuthenticationPrincipal CustomPrincipal user) {
+        if (user != null) {
+            toDoListRequestDto.setUserId(user.getUserId());
+        }
         return ResponseEntity.ok(service.createToDoList(toDoListRequestDto));
     }
 
     @PatchMapping("/{id}")
     public ResponseEntity<ToDoListResponseDto> renameToDoList(@PathVariable Long id,
-                                                          @Valid @RequestBody ToDoListRenameRequestDto toDoListRenameDto) {
-        return ResponseEntity.ok(service.renameToDoList(id, toDoListRenameDto.getName()));    
+                                                              @Valid @RequestBody ToDoListRenameRequestDto toDoListRenameDto,
+                                                              @AuthenticationPrincipal CustomPrincipal user) {
+        Long userId = user != null ? user.getUserId() :  null;
+        return ResponseEntity.ok(service.renameToDoList(id, toDoListRenameDto.getName(), userId));
     }
     
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTodoList(@PathVariable Long id) {
-        service.deleteToDoList(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<String> deleteTodoList(@PathVariable Long id, @AuthenticationPrincipal CustomPrincipal user) {
+        Long userId = user != null ? user.getUserId() :  null;
+        service.deleteToDoList(id, userId);
+        return ResponseEntity.ok("ToDoList # " + id + " deleted");
     }
 }

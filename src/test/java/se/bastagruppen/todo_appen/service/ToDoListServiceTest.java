@@ -7,7 +7,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mapstruct.factory.Mappers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.ActiveProfiles;
@@ -82,14 +81,14 @@ public class ToDoListServiceTest {
     @Test
     @DisplayName("Deleting an existing list should delete properly")
     void deleteToDoListTest() {
-        when(repository.findById(1L)).thenReturn(java.util.Optional.of(testToDoList));
-        service.deleteToDoList(1L);
+        when(repository.findByIdAndOwnerId(1L, 1L)).thenReturn(java.util.Optional.of(testToDoList));
+        service.deleteToDoList(1L, 1L);
         verify(repository).delete(testToDoList);
     }
     @Test
     @DisplayName("Deleting a nonexistent list should throw exception")
     void deleteNonexistentToDoListTest() {
-        when(repository.findById(999L)).thenReturn(java.util.Optional.empty());
-        assertThrows(se.bastagruppen.todo_appen.exception.ToDoListNotFoundException.class, () -> service.deleteToDoList(999L));
+        when(repository.findByIdAndOwnerId(999L, 1L)).thenReturn(java.util.Optional.empty());
+        assertThrows(se.bastagruppen.todo_appen.exception.ToDoListNotFoundException.class, () -> service.deleteToDoList(999L, 1L));
     }
 }

@@ -1,7 +1,5 @@
 package se.bastagruppen.todo_appen.controller;
 
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 import org.mockito.Spy;
 import org.springframework.beans.factory.annotation.Autowired;
