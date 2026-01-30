@@ -35,8 +35,8 @@ public class ToDoListService {
         return repository.findAll().stream().map(mapper::toDto).toList();
     }
 
-    public ToDoListResponseDto getById(Long id) {
-        return mapper.toDto(repository.findById(id).orElseThrow(() -> new ToDoListNotFoundException(id)));
+    public ToDoListResponseDto getByIdAndUserId(Long id, Long userId) {
+        return mapper.toDto(repository.findByIdAndOwnerId(id, userId).orElseThrow(() -> new ToDoListNotFoundException(id)));
     }
 
     public List<ToDoListResponseDto> search(Long userId, Long catalogId, String filter, List<String> tags) {
@@ -55,8 +55,8 @@ public class ToDoListService {
         return result.stream().map(mapper::toDto).toList();
     }
 
-    public ToDoListResponseDto renameToDoList(Long id, String newName) {
-        ToDoList list = repository.findById(id)
+    public ToDoListResponseDto renameToDoList(Long id, String newName, Long userId) {
+        ToDoList list = repository.findByIdAndOwnerId(id, userId)
                 .orElseThrow(() -> new ToDoListNotFoundException(id));
 
         if (!list.getName().equals(newName) && repository.existsByCatalogIdAndName(list.getCatalog().getId(), newName)) {
@@ -68,12 +68,8 @@ public class ToDoListService {
         return mapper.toDto(repository.save(list));
         }
         
-    public void deleteToDoList(Long id){
-        ToDoList target =  repository.findById(id).orElseThrow(() -> new ToDoListNotFoundException(id));
-
-        //todo: requires user verification functionality to implement fully, tentative implement:
-        // if (!target.getUser().getId().equals(userId)) {throw new UnauthorizedActionException("Cannot delete a list you do not own"); }
-
+    public void deleteToDoList(Long id, Long userId) {
+        ToDoList target =  repository.findByIdAndOwnerId(id, userId).orElseThrow(() -> new ToDoListNotFoundException(id));
         repository.delete(target);
     }
 }
