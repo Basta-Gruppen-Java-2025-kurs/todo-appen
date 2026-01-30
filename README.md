@@ -70,10 +70,11 @@ docker compose up --build
 
 ### 📁 Catalogs (`/catalogs`)
 
-| Method | Endpoint | Description |
-|------|---------|-------------|
-| POST | /catalogs | Create a catalog for a user |
-| GET  | /catalogs?userId={userId} | Get all catalogs for a user |
+| Method  | Endpoint                  | Description                 |
+|---------|---------------------------|-----------------------------|
+| POST    | /catalogs                 | Create a catalog for a user |
+| GET     | /catalogs?userId={userId} | Get all catalogs for a user |
+| DELETE  | /catalogs/{catalogId}     | Delete a catalog            |
 
 **Create catalog (request params):**
 POST /catalogs?userId=1&name=Work

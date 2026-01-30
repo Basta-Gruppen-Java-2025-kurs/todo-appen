@@ -3,6 +3,7 @@ package se.bastagruppen.todo_appen.service;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import se.bastagruppen.todo_appen.dto.ToDoListCatalogResponse;
+import se.bastagruppen.todo_appen.exception.NotFoundException;
 import se.bastagruppen.todo_appen.model.ToDoListCatalog;
 import se.bastagruppen.todo_appen.model.User;
 import se.bastagruppen.todo_appen.repository.ToDoListCatalogRepository;
@@ -42,6 +43,15 @@ public class ToDoListCatalogService {
         catalogRepository.save(catalog);
 
         return mapToResponse(catalog);
+    }
+
+    public void deleteCatalog(Long catalogId, Long userId) {
+        ToDoListCatalog catalog = catalogRepository
+                .findByIdAndUserId(catalogId, userId)
+                .orElseThrow(() -> new NotFoundException("Catalog not found"));
+
+        catalogRepository.delete(catalog);
+
     }
 
     public List<ToDoListCatalogResponse> getCatalogsForUser(Long userId) {

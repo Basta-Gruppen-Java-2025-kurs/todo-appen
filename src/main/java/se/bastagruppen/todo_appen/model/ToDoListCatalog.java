@@ -6,6 +6,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(
@@ -19,6 +24,15 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ToDoListCatalog {
+
+    public ToDoListCatalog(Long id, String name, User user) {
+        this.id = id;
+        this.name = name;
+        this.user = user;
+        this.lists = new ArrayList<>();
+    }
+
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -30,4 +44,7 @@ public class ToDoListCatalog {
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    @OneToMany(mappedBy = "catalog", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ToDoList> lists = new ArrayList<>();
 }
