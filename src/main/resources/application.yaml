@@ -18,10 +18,15 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
-
+    
   sql:
     init:
       mode: always
+
+jwt:
+  secret: ${JWT_SECRET}
+  expiration-minutes: 30
+
 
 server:
   port: 8080
