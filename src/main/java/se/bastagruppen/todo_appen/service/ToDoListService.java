@@ -56,5 +56,14 @@ public class ToDoListService {
         list.setName(newName);
 
         return mapper.toDto(repository.save(list));
+        }
+        
+    public void deleteToDoList(Long id){
+        ToDoList target =  repository.findById(id).orElseThrow(() -> new ToDoListNotFoundException(id));
+
+        //todo: requires user verification functionality to implement fully, tentative implement:
+        // if (!target.getUser().getId().equals(userId)) {throw new UnauthorizedActionException("Cannot delete a list you do not own"); }
+
+        repository.delete(target);
     }
 }

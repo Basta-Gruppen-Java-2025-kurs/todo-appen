@@ -35,6 +35,12 @@ public class ToDoListController {
     @PatchMapping("/{id}/rename")
     public ResponseEntity<ToDoListResponseDto> renameToDoList(@PathVariable Long id,
                                                           @Valid @RequestBody ToDoListRenameRequestDto toDoListRenameDto) {
-        return ResponseEntity.ok(service.renameToDoList(id, toDoListRenameDto.getName()));
+        return ResponseEntity.ok(service.renameToDoList(id, toDoListRenameDto.getName()));    
+    }
+    
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteTodoList(@PathVariable Long id) {
+        service.deleteToDoList(id);
+        return ResponseEntity.noContent().build();
     }
 }
