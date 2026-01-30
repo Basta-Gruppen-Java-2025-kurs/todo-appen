@@ -39,7 +39,7 @@ public interface ToDoListRepository extends JpaRepository<ToDoList, Long> {
     @Query("""
     SELECT l FROM ToDoList l
     WHERE l.id = :listId
-    AND l.owner.id = :userId
+    AND l.ownerId = :userId
     """)
     Optional<ToDoList> findByIdAndOwnerId(Long listId, Long userId);
 }

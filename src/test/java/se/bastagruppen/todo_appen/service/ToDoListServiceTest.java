@@ -7,6 +7,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mapstruct.factory.Mappers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.ActiveProfiles;
@@ -53,8 +54,9 @@ public class ToDoListServiceTest {
     @Test
     @DisplayName("Getting a TODO list by Id from repository should yield the correct list")
     void getToDoListByIdTest() {
-        when(repository.findById(1L)).thenReturn(java.util.Optional.of(testToDoList));
-        ToDoListResponseDto responseDto = service.getById(1L);
+        when(repository.findByIdAndOwnerId(testToDoList.getId(), testUser.getId())).thenReturn(java.util.Optional.of(testToDoList));
+        ToDoListResponseDto responseDto = service.getByIdAndUserId(testToDoList.getId(), testUser.getId());
+        verify(repository, times(1)).findByIdAndOwnerId(testToDoList.getId(), testUser.getId());
         assertEquals(testToDoList.getId(), responseDto.getId());
         assertEquals(testToDoList.getName(), responseDto.getName());
         assertEquals(testToDoList.getCatalog().getName(), responseDto.getCatalogName());
