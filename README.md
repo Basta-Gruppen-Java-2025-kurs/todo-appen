@@ -5,11 +5,11 @@ This is a backend API for a Todo List application. Users can create multiple tod
 The API is secured using JWT authentication.
 
 ## Contributors
-- Sara Kluge
-- Dmitrii Sapelkin
-- James Lind
-- Hugo Leijonhufvud
-- Lena Nordström
+- [Sara Kluge](https://github.com/sarakluge)
+- [Dmitrii Sapelkin](https://github.com/kerabromsmu)
+- [James Lind](https://github.com/Jlindhub)
+- [Hugo Leijonhufvud](https://github.com/Lijonhead)
+- [Lena Nordström](https://github.com/lenanor)
 
 
 ---
