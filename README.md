@@ -4,6 +4,14 @@
 This is a backend API for a Todo List application. Users can create multiple todo list catalogs, manage todo list entries and assign tags for filtering. 
 The API is secured using JWT authentication.
 
+## Contributors
+- Sara Kluge
+- Dmitrii Sapelkin
+- James Lind
+- Hugo Leijonhufvud
+- Lena Nordström
+
+
 ---
 
 ## ⚙️ How to use
@@ -95,8 +103,8 @@ POST /catalogs?userId=1&name=Work
 | GET  | /list?catalogId=1&filter=pattern&tags=one,two,three | With parameters: search by criteria (see below) |
 | GET  | /list/{id} | Get a specific todo list by id                  |
 | POST | /list | Create a new todo list                          |
-| PATCH | /list/{id}/rename | Rename a todo list                              |
-| DELETE | /list/{id} | delete a list                                   |
+| PATCH | /list/{id} | Rename a todo list                              |
+| DELETE | /list/{id} | Delete a list                                   |
 
 **Create todo list (request body)**
 ```json
@@ -110,7 +118,7 @@ POST /catalogs?userId=1&name=Work
 **Rename todo list (request body)**
 ```json
 {
-  "name": "New Name"
+  "name": "New name"
 }
 ```
 
@@ -132,13 +140,16 @@ To search by criteria, use `GET` with `/list` endpoint with any combination of t
 
 ### ✅ ToDo List Entries (`/lists/{listId}/entries`)
 
-| Method | Endpoint | Description |
-|--------|---------|-------------|
+| Method | Endpoint | Description                                   |
+|--------|---------|-----------------------------------------------|
 | GET    | /lists/{listId}/entries | Get all entries (including subtasks) of a list |
-| POST   | /lists/{listId}/entries | Create a new entry in a list |
-| DELETE | /entries/{entryId} | Delete an entry by id |
+| POST   | /lists/{listId}/entries | Create a new entry in a list                  |
+| DELETE | /entries/{entryId} | Delete an entry by id                         |
+| PATCH  | /entries/{entryId} | Update the done status of an entry by id      |
+| PUT    | /entries/{entryId} | Update an entry by id                         |
 
-**Create entry (request body)**
+**Create entry (request body)**  
+Include the parent’s ID if the entry is a subtask.
 
 ```json
 {
@@ -148,6 +159,24 @@ To search by criteria, use `GET` with `/list` endpoint with any combination of t
   "parentId": null
 }
 ```
+**Update done (request body)**
+
+```json
+{
+  "done": true
+}
+```
+**Update entry (request body)**
+
+```json
+{
+  "summary": "Implement API",
+  "details": "Create controller, service and repository",
+  "done": true,
+  "deadline": "2026-01-30"
+}
+```
+
 ### Class Diagram
 ![Class Diagram](todoStructure.png)
 
