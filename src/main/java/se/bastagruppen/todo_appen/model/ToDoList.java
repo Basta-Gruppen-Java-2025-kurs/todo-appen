@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -43,6 +45,13 @@ public class ToDoList {
     @Column(name = "user_id")
     @JsonProperty("user_id")
     private Long ownerId;
+
+    @OneToMany(
+            mappedBy = "list",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private List<ToDoListEntry> entries = new ArrayList<>();
 
     public ToDoList(Long id, String name, Set<Tag> tags, Long catalogId, Long ownerId) {
         this.id = id;
