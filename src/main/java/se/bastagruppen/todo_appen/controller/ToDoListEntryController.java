@@ -36,21 +36,22 @@ public class ToDoListEntryController {
         return ResponseEntity.ok(service.getAllEntriesOfAList(listId, user.getUserId()));
     }
 
-    // GET /entries/{entryId}
-
-    // PUT /entries/{entryId}
     @PutMapping("/entries/{entryId}")
-    public ResponseEntity<ToDoListEntryResponseDto> updateEntry(@PathVariable Long entryId, @RequestBody @Valid ToDoListEntryUpdateDto dto) {
-        // TODO: Change hard coded user id to logged in user
+    public ResponseEntity<ToDoListEntryResponseDto> updateEntry(
+            @PathVariable Long entryId,
+            @RequestBody @Valid ToDoListEntryUpdateDto dto,
+            @AuthenticationPrincipal CustomPrincipal user) {
 
-        return ResponseEntity.ok(service.updateEntry(entryId, 1L, dto));
+        return ResponseEntity.ok(service.updateEntry(entryId, user.getUserId(), dto));
     }
 
 
     @PatchMapping("/entries/{entryId}")
-    public ResponseEntity<Void> updateDone(@PathVariable Long entryId, @RequestBody @Valid ToDoListEntryUpdateDoneDto dto) {
-        // TODO: Change hard coded user id to logged in user
-        service.updateDone(entryId, 1L, dto);
+    public ResponseEntity<Void> updateDone(
+            @PathVariable Long entryId,
+            @RequestBody @Valid ToDoListEntryUpdateDoneDto dto,
+            @AuthenticationPrincipal CustomPrincipal user) {
+        service.updateDone(entryId, user.getUserId(), dto);
 
         return ResponseEntity.noContent().build();
     }

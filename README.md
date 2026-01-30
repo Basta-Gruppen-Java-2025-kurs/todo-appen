@@ -95,6 +95,7 @@ POST /catalogs?userId=1&name=Work
 | GET  | /list/{id} | Get a specific todo list by id                                            |
 | POST | /list | Create a new todo list                                                    |
 | PATCH | /list/{id}/rename | Rename a todo list                                                        |
+| DELETE | /list/{id} | delete a list         |
 
 **Create todo list (request body)**
 ```json

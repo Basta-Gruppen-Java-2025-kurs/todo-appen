@@ -76,4 +76,18 @@ public class ToDoListServiceTest {
         // all parameters are set
         // each of the parameters is set
     }
+
+    @Test
+    @DisplayName("Deleting an existing list should delete properly")
+    void deleteToDoListTest() {
+        when(repository.findById(1L)).thenReturn(java.util.Optional.of(testToDoList));
+        service.deleteToDoList(1L);
+        verify(repository).delete(testToDoList);
+    }
+    @Test
+    @DisplayName("Deleting a nonexistent list should throw exception")
+    void deleteNonexistentToDoListTest() {
+        when(repository.findById(999L)).thenReturn(java.util.Optional.empty());
+        assertThrows(se.bastagruppen.todo_appen.exception.ToDoListNotFoundException.class, () -> service.deleteToDoList(999L));
+    }
 }
