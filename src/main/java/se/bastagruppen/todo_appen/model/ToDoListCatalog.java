@@ -2,10 +2,10 @@ package se.bastagruppen.todo_appen.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(
@@ -18,7 +18,17 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class ToDoListCatalog {
+
+    public ToDoListCatalog(Long id, String name, User user) {
+        this.id = id;
+        this.name = name;
+        this.user = user;
+        this.lists = new ArrayList<>();
+    }
+
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -30,4 +40,7 @@ public class ToDoListCatalog {
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    @OneToMany(mappedBy = "catalog", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ToDoList> lists = new ArrayList<>();
 }
