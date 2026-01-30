@@ -57,11 +57,13 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 return;
             }
 
-            String userId = claims.getSubject();
+            Long userId = Long.valueOf(claims.getSubject());
             String username = claims.get("username", String.class);
 
+            CustomPrincipal principal = new CustomPrincipal(userId, username);
+
             var auth = new UsernamePasswordAuthenticationToken(
-                    username != null ? username : userId,
+                    principal,
                     null,
                     List.of(new SimpleGrantedAuthority("ROLE_USER"))
             );
