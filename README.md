@@ -89,14 +89,14 @@ POST /catalogs?userId=1&name=Work
 
 ### 📝 ToDo Lists (`/list`)
 
-| Method | Endpoint | Description                                                               |
-|------|---------|---------------------------------------------------------------------------|
-| GET  | /list | Without parameters &mdash; get all todo lists                             |
-| GET  | /list?userId=1&catalogId=1&filter=pattern&tags=one,two,three | With parameters: search by criteria |
-| GET  | /list/{id} | Get a specific todo list by id                                            |
-| POST | /list | Create a new todo list                                                    |
-| PATCH | /list/{id}/rename | Rename a todo list                                                        |
-| DELETE | /list/{id} | delete a list         |
+| Method | Endpoint | Description                                     |
+|------|---------|-------------------------------------------------|
+| GET  | /list | Without parameters &mdash; get all todo lists   |
+| GET  | /list?catalogId=1&filter=pattern&tags=one,two,three | With parameters: search by criteria (see below) |
+| GET  | /list/{id} | Get a specific todo list by id                  |
+| POST | /list | Create a new todo list                          |
+| PATCH | /list/{id}/rename | Rename a todo list                              |
+| DELETE | /list/{id} | delete a list                                   |
 
 **Create todo list (request body)**
 ```json
@@ -120,10 +120,13 @@ To search by criteria, use `GET` with `/list` endpoint with any combination of t
 
 | Parameter | Usage |
 |-----------|-------|
-|
-Examples:
+| catalogId | `/list?catalogId=<id>` &mdash; search for lists in catalog with given id |
+| filter | `/list?filter=<substring>` &mdash; search for lists that have given substring in the name |
+| tags | `/list?tags=<tag1>,<tag2>,<tagX>` &mdash; search for lists that have given tags | 
 
-`GET /list?/list?userId=1&catalogId=1&filter=pattern` &mdash; search for all lists that belong to the user with id=1 that are in catalog with id=1, and the list name contains the substring "pattern".
+**Examples**:
+
+`GET /list?/list?catalogId=1&filter=pattern` &mdash; search for all lists that are in catalog with id=1, and the list name contains the substring "pattern".
 
 `GET /list?/list?tags=one,two,three` &mdash; search for all lists that have these 3 tags: "one", "two", "three"
 
