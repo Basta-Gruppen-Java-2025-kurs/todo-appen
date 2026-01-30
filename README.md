@@ -4,6 +4,14 @@
 This is a backend API for a Todo List application. Users can create multiple todo list catalogs, manage todo list entries and assign tags for filtering. 
 The API is secured using JWT authentication.
 
+## Contributors
+- Sara Kluge
+- Dmitrii Sapelkin
+- James Lind
+- Hugo Leijonhufvud
+- Lena Nordström
+
+
 ---
 
 ## ⚙️ How to use
@@ -89,14 +97,14 @@ POST /catalogs?userId=1&name=Work
 
 ### 📝 ToDo Lists (`/list`)
 
-| Method | Endpoint | Description                                                               |
-|------|---------|---------------------------------------------------------------------------|
-| GET  | /list | Without parameters &mdash; get all todo lists                             |
-| GET  | /list?userId=1&catalogId=1&filter=pattern&tags=one,two,three | With parameters: search by criteria |
-| GET  | /list/{id} | Get a specific todo list by id                                            |
-| POST | /list | Create a new todo list                                                    |
-| PATCH | /list/{id}/rename | Rename a todo list                                                        |
-| DELETE | /list/{id} | delete a list         |
+| Method | Endpoint | Description                                   |
+|------|---------|-----------------------------------------------|
+| GET  | /list | Without parameters &mdash; get all todo lists |
+| GET  | /list?userId=1&catalogId=1&filter=pattern&tags=one,two,three | With parameters: search by criteria           |
+| GET  | /list/{id} | Get a specific todo list by id                |
+| POST | /list | Create a new todo list                        |
+| PATCH | /list/{id} | Rename a todo list                            |
+| DELETE | /list/{id} | Delete a list                                 |
 
 **Create todo list (request body)**
 ```json
@@ -110,7 +118,7 @@ POST /catalogs?userId=1&name=Work
 **Rename todo list (request body)**
 ```json
 {
-  "name": "New Name"
+  "name": "New name"
 }
 ```
 
@@ -123,19 +131,22 @@ To search by criteria, use `GET` with `/list` endpoint with any combination of t
 |
 Examples:
 
-`GET /list?/list?userId=1&catalogId=1&filter=pattern` &mdash; search for all lists that belong to the user with id=1 that are in catalog with id=1, and the list name contains the substring "pattern".
+`GET /list?userId=1&catalogId=1&filter=pattern` &mdash; search for all lists that belong to the user with id=1 that are in catalog with id=1, and the list name contains the substring "pattern".
 
-`GET /list?/list?tags=one,two,three` &mdash; search for all lists that have these 3 tags: "one", "two", "three"
+`GET /list?tags=one,two,three` &mdash; search for all lists that have these 3 tags: "one", "two", "three"
 
 ### ✅ ToDo List Entries (`/lists/{listId}/entries`)
 
-| Method | Endpoint | Description |
-|--------|---------|-------------|
+| Method | Endpoint | Description                                   |
+|--------|---------|-----------------------------------------------|
 | GET    | /lists/{listId}/entries | Get all entries (including subtasks) of a list |
-| POST   | /lists/{listId}/entries | Create a new entry in a list |
-| DELETE | /entries/{entryId} | Delete an entry by id |
+| POST   | /lists/{listId}/entries | Create a new entry in a list                  |
+| DELETE | /entries/{entryId} | Delete an entry by id                         |
+| PATCH  | /entries/{entryId} | Update the done status of an entry by id      |
+| PUT    | /entries/{entryId} | Update an entry by id                         |
 
-**Create entry (request body)**
+**Create entry (request body)**  
+Include the parent’s ID if the entry is a subtask.
 
 ```json
 {
@@ -145,6 +156,24 @@ Examples:
   "parentId": null
 }
 ```
+**Update done (request body)**
+
+```json
+{
+  "done": true
+}
+```
+**Update entry (request body)**
+
+```json
+{
+  "summary": "Implement API",
+  "details": "Create controller, service and repository",
+  "done": true,
+  "deadline": "2026-01-30"
+}
+```
+
 ### Class Diagram
 ![Class Diagram](todoStructure.png)
 
