@@ -33,9 +33,13 @@ mvn spring-boot:run -Pmariadb
 
 ### ▶️ Run with Docker
 1. Make sure **Docker** is installed.
-2. To build and start containers, run this from the project's root folder:
+2. To *build and start* containers, run this from the project's root folder:
 ```bash
-docker compose up --build
+docker compose up -d --build
+```
+3. To *stop* running containers, run this from the project's root folder:
+```bash
+docker compose down
 ```
 
 ---
