@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import se.bastagruppen.todo_appen.dto.ToDoListCatalogResponse;
+import se.bastagruppen.todo_appen.security.CustomPrincipal;
 import se.bastagruppen.todo_appen.service.ToDoListCatalogService;
 
 import java.util.List;

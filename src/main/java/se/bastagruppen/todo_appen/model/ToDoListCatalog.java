@@ -37,7 +37,5 @@ public class ToDoListCatalog {
     private User user;
 
     @OneToMany(mappedBy = "catalog", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "catalog_id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
     private List<ToDoList> lists = new ArrayList<>();
 }
